@@ -37,28 +37,28 @@ TEST(SymmetricalDifferenceTest, Test1)
 
 TEST(SymmetricalDifferenceTest, Test2)
 {
-	Set<int> s[2];
+	Set<char> s[2];
 	
-	s[0].insert(1, 1);
-	s[0].insert(2, 1);
-	s[0].insert(3, 1);
+	s[0].insert('a', 1);
+	s[0].insert('b', 1);
+	s[0].insert('c', 1);
 	
-	s[1].insert(3, 1);
-	s[1].insert(2, 1);
-	s[1].insert(1, 1);
-	s[1].insert(5, 2);
+	s[1].insert('c', 1);
+	s[1].insert('b', 1);
+	s[1].insert('a', 1);
+	s[1].insert('e', 2);
 	
-	Set<int> expectedResult;
-	expectedResult.insert(5, 2);
+	Set<char> expectedResult;
+	expectedResult.insert('e', 2);
 	
 	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
 }
 
 TEST(SymmetricalDifferenceTest, Test3)
 {
-	Set<int> s[4];
+	Set<float> s[4];
 	
-	Set<int> expectedResult;
+	Set<float> expectedResult;
 	
 	ASSERT_EQ(symmetricalDifference(s, 4), expectedResult);
 }
