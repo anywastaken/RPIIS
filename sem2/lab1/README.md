@@ -1,6 +1,8 @@
 # Лабораторная работа №1
+
 # :dart: Цель
 Исследовать свойства структур данных и разработать библиотеку алгоритмов обработки конкретной структуры данных.
+
 # :pushpin: Постановка задачи
 1. Разработать библиотеку для работы со структурой данных Бор на языке С++.
 2. Разработать тестовую программу, которая демонстрирует
@@ -10,15 +12,32 @@
 отвечать требованиям полноты, адекватности и непротиворечивости. Система тестов должна учитывать не только корректную работу на
 правильных данных, но и предусматривать корректное завершение программы в случае некорректных данных.
 4. По результатам выполнения задания составить отчет.
+
 # :page_with_curl: Задача(Вариант 10)
 Организовать структуру данных бор (префиксного дерева), организовать функции вставки строки в бор, удаления строки из бора, поиска строки в
 боре.
+
 # :book: Список используемых понятий
 *Бор* — структура данных для хранения набора строк, представляющая из себя подвешенное дерево с символами на рёбрах. Строки получаются последовательной записью всех символов, хранящихся на рёбрах между корнем бора и терминальной вершиной.
+
 Например, бор для набора образцов {he,she,his,hers} выглядит так:
 
 ![Бор](https://github.com/user-attachments/assets/7f523205-380d-4fba-a12f-32de1f6fd7ac)
- 
+
+В боре, изображённом ниже, хранятся следующие строки:
+* “to” - 7 экземпляров
+* “tea” - 3 экземпляра
+* “ted” - 4 экземпляра
+* “ten” - 12 экземпляров
+* “A” - 15 экземпляров
+* “i” - 11 экземпляров
+* “in” - 5 экземпляров
+* “inn” - 9 экземпляров
+
+![image](https://github.com/user-attachments/assets/94b18b01-5ecb-4e13-af3e-4e2e1895a7f8)
+
+Таким образом, в каждой вершине бора хранится количество строк, заканчивающихся в этой вершине, и указатели на дочерние вершины, каждая из которых соответствует определённому символу.
+
 Он устроен в виде дерева, где на ребрах между вершинами написана символы, а некоторые вершины помечены терминальными. 
 *Терминальные вершины* - вершины обозначающие конец строки.
 Бор хранит ровно те строки, которые получаются, если выписать подряд все буквы на путях от корня до терминальных вершин.
@@ -74,7 +93,7 @@ Node::Node(Node* p){
 	this->front_ptrs[0] = p;
 }
 ```
-
+*Конструктор* - это метод, который вызывается во время создания класса. Методы - это обычные функции, в функционале которых можно использовать свойства. Свойства - это все что может хранить информацию, которую вы потом можете заполнять (переменные, массивы и т.д.).
 Сначала реализуем конструкторы для класса Node. 
 1. Когда создается объект Node без параметров, первый меняет переменную is_root в true (значит, этот узел является корнем бора).
 2. При создании объекта Node с одним параметром типа char, этот конструктор устанавливает значение переменной c в переданное значение.
@@ -105,6 +124,7 @@ void delete_bor(Node*);
 Далее рассмотрим bor.cpp, который содержит в себе эти функции
 -
 Каждую рассмотрим отдельно. Алгоритм описан в комментариях.
+
 ### Добавление строки в бор
 ```
 void add_string(string s, Node* root){ 
@@ -114,33 +134,218 @@ void add_string(string s, Node* root){
 	for (int i = 0; i < s.size(); i++){ //обходим строку
 		find = false;
 		for (int j = 0; j < current->front_ptrs.size(); j++){ //обходим указатели текущего узла
-			ptr = current->front_ptrs[j];
+			ptr = current->front_ptrs[j]; // указывает на текущий дочерний узел
 			if (ptr != nullptr){
-				if (s[i] == ptr->c){
-					current = current->front_ptrs[j];
+				if (s[i] == ptr->c){ //если среди потомков найден узел, содержащий текущий символ строки, просто переходим на него 
+					current = current->front_ptrs[j]; //обновляем указатель current на найденный узел
 					find = true;
 					break;
 				}
 			}
 		}
-		if (find == false){
-			if (current->front_ptrs[0] == nullptr)
-				current->front_ptrs[current->num] = new Node(s[i]);
+		if (find == false){ //если не найден, создаём новый узел
+			if (current->front_ptrs[0] == nullptr) //если нет дочерних узлов
+				current->front_ptrs[current->num] = new Node(s[i]); //создаем новый узел с символом s[i] и помещаем его в front_ptrs по индексу current->num
 			else
-				current->front_ptrs.push_back(new Node(s[i]));
-			current->num++;
-			ptr = current->front_ptrs[current->num - 1];
+				current->front_ptrs.push_back(new Node(s[i])); //добавляем новый узел в конец front_ptrs
+			current->num++; //увеличиваем количество дочерних узлов
+			ptr = current->front_ptrs[current->num - 1];//указатель ptr указывает на добавленный узел
 			ptr->back_ptr = current;
 			current = current->front_ptrs[current->num - 1];
 		}
-		if (i == s.size() - 1)
+		if (i == s.size() - 1)//если дошли до конца строки, делаем текущую вершину терминальной
 			current->terminal = true;
 	}
 	cout << "Строка была добавлена!" << endl << endl;
 }
 ```
 
+### Удаление строки из бора
+```
+int delete_string(string s, Node* root){
+	Node* current = root;
+	Node* ptr;
+	int i, j;
+	bool fnd = false;
+	for (i = 0; i < s.size(); i++){
+		for (j = 0; j < current->front_ptrs.size(); j++){
 
+			ptr = current->front_ptrs[j];
+			if (ptr == nullptr){
+				cout << "Строка не найдена" << endl << endl;
+				return 1;
+			}
+			if (s[i] == ptr->c){
+				current = current->front_ptrs[j];
+				fnd = true;
+				break;
+			}
+		}
+		if (fnd == false){
+			cout << "Строка не найдена" << endl << endl;
+			return 1;
+		}
+	}
+	if (current->terminal != true){
+		cout << "Строка не найдена" << endl << endl;
+		return 1;
+	}
+	for (i = s.size() - 1; i >= 0; i--){
+		if ((current->num < 1 && current->terminal == false) || (i == s.size() - 1 && current->num < 1)){
+			current = current->back_ptr;
+			for (j = 0; j < current->front_ptrs.size(); j++){
+				ptr = current->front_ptrs[j];
+				if (s[i] == ptr->c){
+					delete current->front_ptrs[j];
+					current->front_ptrs.erase(current->front_ptrs.begin() + j);
+					break;
+				}
+			}
+			current->num--;
+		}
+		else{
+			if (i == s.size() - 1)
+				current->terminal = false;
+			break;
+		}
+	}
+	cout << "Строка была удалена!" << endl << endl;
+	return 0;
+}
+```
+
+### Вспомогательная рекурсивная функция для функции ShowBor
+```
+void recursive(Node* current, string word){
+	int i;
+	for (i = 0; i < current->front_ptrs.size(); i++){
+		if (current->front_ptrs[i] != nullptr){
+			current = current->front_ptrs[i];
+			if (current->is_root == false){
+				word.push_back(current->c);
+				if (current->terminal == true){
+					cout << word << endl;
+				}
+			}
+			recursive(current, word);
+		}
+	}
+}
+```
+
+### Просмотр бора
+```
+void view_bor(Node* root){
+	Node* current = root->back_ptr; //переходим на узел перед корнем
+	string word;
+	recursive(current, word); //передаём этот узел в функцию для рекурсии
+	cout << endl;
+}
+```
+
+### Поиск строки в боре
+```
+int search_string(string s, Node* root){
+	Node* current = root;
+	Node* ptr;
+	int i, j;
+	bool fnd = false;
+	for (i = 0; i < s.size(); i++){
+		for (j = 0; j < current->front_ptrs.size(); j++){
+			ptr = current->front_ptrs[j];
+			if (ptr == nullptr){
+				cout << "Строка не найдена" << endl << endl;
+				return 1;
+			}
+			if (s[i] == ptr->c){
+				current = current->front_ptrs[j];
+				fnd = true;
+				break;
+			}
+		}
+		if (fnd == false){
+			cout << "Строка не найдена" << endl << endl;
+			return 1;
+		}
+	}
+	if (current->terminal == true){
+		cout << "Строка найдена" << endl << endl;
+		return 0;
+	}
+	else{
+		cout << "Строка не найдена" << endl << endl;
+		return 1;
+	}
+}
+```
+
+### Удаление бора
+```
+void delete_bor(Node* root){
+	int i;
+	if (root != nullptr)
+		for (i = 0; i < root->front_ptrs.size(); i++){
+			if (root->front_ptrs[i]){
+				delete_bor(root->front_ptrs[i]);
+			}
+		}
+	delete root;
+}
+```
+
+Наконец, рассмотрим главный файл mainn.cpp
+-
+```
+#include <iostream>
+#include <string>
+#include "Node.h"; 
+#include "bor.h";
+using namespace std;
+
+
+int main(){
+	setlocale(LC_ALL, "ru");
+
+	int n = 0;
+	string s;
+	Node* root = new Node();
+	root->back_ptr = new Node(root);
+
+	do{
+		cout << "Выберите действие:\n 1 - Добавить строку\n 2 - Удалить строку\n 3 - Найти строку\n 4 - Просмотреть\n 0 - Удалить бор и выйти \n" << endl;
+		cin >> n;
+
+		switch (n){
+		case 1:
+			cout << "Введите строку для добавления: ";
+			cin >> s;
+			add_string(s, root);
+			break;
+		case 2:
+			cout << "Введите строку для удаления: ";
+			cin >> s;
+			delete_string(s, root);
+			break;
+		case 3:
+			cout << "Введите строку для поиска: ";
+			cin >> s;
+			search_string(s, root);
+			break;
+		case 4:
+			cout << "------Бор------" << endl;
+			view_bor(root);
+			break;
+		case 0:
+			delete root->back_ptr;
+			delete_bor(root);
+			return 0;
+		default:
+			cout << "Нет такого действия";
+		}
+
+	} while (true);
+}
+```
 
 # :point_right: Выводы
 Мы организовали работу бора как структуры данных со всеми необходимыми функциямиб реализовали поставленную задачу с использованием ООП и классов на языке программирования С++.
@@ -148,8 +353,10 @@ void add_string(string s, Node* root){
 Результаты работы подтверждают необходимость использования Бора для программ, работающих с текстовой информацией, где важны скорость вставки, поиска и удаления данных.
 
 # :computer: Список использованных источников
-1.Сайт "Университет ИТМО" \[Электронный ресурс\]. – Режим доступа:[https://neerc.ifmo.ru/wiki/Бор](https://neerc.ifmo.ru/wiki/index.php?title=%D0%91%D0%BE%D1%80).
+1. Сайт "Университет ИТМО" \[Электронный ресурс\]. – Режим доступа: [https://neerc.ifmo.ru/wiki/Бор](https://neerc.ifmo.ru/wiki/index.php?title=%D0%91%D0%BE%D1%80).
 
-2.Сайт "Алгоритмика" \[Электронный ресурс\]. – Режим доступа:[https://algorithmica.org/Бор](https://algorithmica.org/ru/trie).
+2. Сайт "Алгоритмика" \[Электронный ресурс\]. – Режим доступа: [https://algorithmica.org/Бор](https://algorithmica.org/ru/trie).
 
-3.Сайт "Информатика для школы" \[Электронный ресурс\]. – Режим доступа:[https://silvertests.ru/Префиксное дерево](https://silvertests.ru/GuideView.aspx?id=32133).
+3. Сайт "Информатика для школы" \[Электронный ресурс\]. – Режим доступа: [https://silvertests.ru/Префиксное дерево](https://silvertests.ru/GuideView.aspx?id=32133).
+
+4. Сайт "Киберфорум.ру" \[Электронный ресурс\]. – Режим доступа: [https://www.cyberforum.ru/Очистка префиксного дерева](https://www.cyberforum.ru/cpp-beginners/thread3068833.html)
