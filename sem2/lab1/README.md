@@ -360,3 +360,5 @@ int main(){
 3. Сайт "Информатика для школы" \[Электронный ресурс\]. – Режим доступа: [https://silvertests.ru/Префиксное дерево](https://silvertests.ru/GuideView.aspx?id=32133).
 
 4. Сайт "Киберфорум.ру" \[Электронный ресурс\]. – Режим доступа: [https://www.cyberforum.ru/Очистка префиксного дерева](https://www.cyberforum.ru/cpp-beginners/thread3068833.html)
+
+5. Сайт "Олимпиадное программирование в Бресте и Беларуси" \[Электронный ресурс\]. — Режим доступа: [https://brestprog.by/Бор](https://brestprog.by/topics/trie/)
