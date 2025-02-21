@@ -100,29 +100,29 @@ TEST(SymmetricalDifferenceTest, Test5)
 	expectedResult.insert(5, 1);
 }
 
+TEST(SymmetricalDifferenceTest, Test6)
+{
+	Set< Set<int> > s[1];
+	
+	Set<int> ss;
+	ss.insert(1, 1);
+	ss.insert(2, 1);
+	
+	s[0].insert(ss, 1);
+	
+	Set< Set<int> > expectedResult;
+	
+	Set<int> ssExpected;
+	ssExpected.insert(1, 1);
+	ssExpected.insert(2, 1);
+	
+	expectedResult.insert(ssExpected, 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 1), expectedResult);
+}
+
 int main(int argc, char *argv[])
 {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
-
-/*
-    [==========] Running 5 tests from 1 test suite.
-    [----------] Global test environment set-up.
-    [----------] 5 tests from SymmetricalDifferenceTest
-    [ RUN      ] SymmetricalDifferenceTest.Test1
-    [       OK ] SymmetricalDifferenceTest.Test1 (0 ms)
-    [ RUN      ] SymmetricalDifferenceTest.Test2
-    [       OK ] SymmetricalDifferenceTest.Test2 (0 ms)
-    [ RUN      ] SymmetricalDifferenceTest.Test3
-    [       OK ] SymmetricalDifferenceTest.Test3 (0 ms)
-    [ RUN      ] SymmetricalDifferenceTest.Test4
-    [       OK ] SymmetricalDifferenceTest.Test4 (0 ms)
-    [ RUN      ] SymmetricalDifferenceTest.Test5
-    [       OK ] SymmetricalDifferenceTest.Test5 (0 ms)
-    [----------] 5 tests from SymmetricalDifferenceTest (0 ms total)
-
-    [----------] Global test environment tear-down
-    [==========] 5 tests from 1 test suite ran. (0 ms total)
-    [  PASSED  ] 5 tests.
- */
