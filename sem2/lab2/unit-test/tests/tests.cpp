@@ -63,6 +63,43 @@ TEST(SymmetricalDifferenceTest, Test3)
 	ASSERT_EQ(symmetricalDifference(s, 4), expectedResult);
 }
 
+TEST(SymmetricalDifferenceTest, Test4)
+{
+	Set<int> s[1];
+	
+	s[0].insert(1, 1);
+	s[0].insert(2, 1);
+	
+	Set<int> expectedResult;
+	expectedResult.insert(1, 1);
+	expectedResult.insert(2, 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 1), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test5)
+{
+	Set<int> s[2];
+	
+	s[0].insert(1, 2);
+	s[0].insert(6, 1);
+	s[0].insert(5, 3);
+	s[0].insert(2, 1);
+	
+	s[1].insert(2, 3);
+	s[1].insert(5, 2);
+	s[1].insert(4, 2);
+	s[1].insert(7, 1);
+	s[1].insert(6, 1);
+	
+	Set<int> expectedResult;
+	expectedResult.insert(2, 2);
+	expectedResult.insert(4, 2);
+	expectedResult.insert(1, 2);
+	expectedResult.insert(7, 1);
+	expectedResult.insert(5, 1);
+}
+
 int main(int argc, char *argv[])
 {
 	testing::InitGoogleTest(&argc, argv);
@@ -70,20 +107,22 @@ int main(int argc, char *argv[])
 }
 
 /*
-
-    [==========] Running 3 tests from 1 test suite.
+    [==========] Running 5 tests from 1 test suite.
     [----------] Global test environment set-up.
-    [----------] 3 tests from SymmetricalDifferenceTest
+    [----------] 5 tests from SymmetricalDifferenceTest
     [ RUN      ] SymmetricalDifferenceTest.Test1
     [       OK ] SymmetricalDifferenceTest.Test1 (0 ms)
     [ RUN      ] SymmetricalDifferenceTest.Test2
     [       OK ] SymmetricalDifferenceTest.Test2 (0 ms)
     [ RUN      ] SymmetricalDifferenceTest.Test3
     [       OK ] SymmetricalDifferenceTest.Test3 (0 ms)
-    [----------] 3 tests from SymmetricalDifferenceTest (0 ms total)
+    [ RUN      ] SymmetricalDifferenceTest.Test4
+    [       OK ] SymmetricalDifferenceTest.Test4 (0 ms)
+    [ RUN      ] SymmetricalDifferenceTest.Test5
+    [       OK ] SymmetricalDifferenceTest.Test5 (0 ms)
+    [----------] 5 tests from SymmetricalDifferenceTest (0 ms total)
 
     [----------] Global test environment tear-down
-    [==========] 3 tests from 1 test suite ran. (0 ms total)
-    [  PASSED  ] 3 tests.
-
+    [==========] 5 tests from 1 test suite ran. (0 ms total)
+    [  PASSED  ] 5 tests.
  */
