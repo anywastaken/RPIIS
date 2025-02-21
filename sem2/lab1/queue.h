@@ -1,5 +1,5 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef queue_h
+#define queue_h
 
 #include <iostream>
 #include <string>
