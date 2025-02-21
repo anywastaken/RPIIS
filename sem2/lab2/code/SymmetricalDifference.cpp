@@ -33,7 +33,7 @@ size_t getSetsCount(std::ifstream &fin)
 	{
 		setsCount = std::stoll(setsCountStr);
 
-                if (setsCount <= 0)
+                if (setsCount < 0)
 		{
 			throw std::exception();
 		}
@@ -64,7 +64,7 @@ Set<int> getNextSet(std::ifstream &fin)
 	{
 		setSize = std::stoul(setSizeStr);
 
-                if (setSize <= 0)
+                if (setSize < 0)
 		{
 			throw std::exception();
 		}
