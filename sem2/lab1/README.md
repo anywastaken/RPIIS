@@ -164,46 +164,44 @@ void add_string(string s, Node* root){
 ```
 int delete_string(string s, Node* root){
 	Node* current = root;
-	Node* ptr;
-	int i, j;
-	bool fnd = false;
-	for (i = 0; i < s.size(); i++){
-		for (j = 0; j < current->front_ptrs.size(); j++){
-
-			ptr = current->front_ptrs[j];
+	Node* ptr; //указатель для перебора дочерних узлов
+	bool find = false; //переменная, показывающая, найден ли узел с соответствующим символом
+	for (int i = 0; i < s.size(); i++){ //обходим строку
+		for (int j = 0; j < current->front_ptrs.size(); j++){ //обходим указатели текущего узла
+			ptr = current->front_ptrs[j]; //устанавливаем указатель ptr на текущий дочерний узел
 			if (ptr == nullptr){
 				cout << "Строка не найдена" << endl << endl;
 				return 1;
 			}
-			if (s[i] == ptr->c){
-				current = current->front_ptrs[j];
-				fnd = true;
+			if (s[i] == ptr->c){ //если символ совпадает с символом текущего узла
+				current = current->front_ptrs[j]; //перемещаем указатель current на дочерний узел, соответствующий найденному символу.
+				find = true;
 				break;
 			}
 		}
-		if (fnd == false){
+		if (find == false){
 			cout << "Строка не найдена" << endl << endl;
 			return 1;
 		}
 	}
-	if (current->terminal != true){
+	if (current->terminal != true){ //если узел с последним символом строки не помечен как конец слова, пишем, что строки в боре нет, завершаем функцию
 		cout << "Строка не найдена" << endl << endl;
 		return 1;
 	}
-	for (i = s.size() - 1; i >= 0; i--){
-		if ((current->num < 1 && current->terminal == false) || (i == s.size() - 1 && current->num < 1)){
-			current = current->back_ptr;
-			for (j = 0; j < current->front_ptrs.size(); j++){
+	for (int i = s.size() - 1; i >= 0; i--){ //обходим строку с конца
+		if ((current->num < 1 && current->terminal == false) || (i == s.size() - 1 && current->num < 1)){ //если текущий узел не имеет потомков кроме раннее удалённого и не является концом другого слова или если это последний символ строки и не имеет больше потомков, то удаляем его
+			current = current->back_ptr; //переходим на родительский узел
+			for (int j = 0; j < current->front_ptrs.size(); j++){ //ищем среди потомков узел, интересующий нас, удаляем его и указатель, указывавший на него из вектора
 				ptr = current->front_ptrs[j];
 				if (s[i] == ptr->c){
 					delete current->front_ptrs[j];
-					current->front_ptrs.erase(current->front_ptrs.begin() + j);
+					current->front_ptrs.erase(current->front_ptrs.begin() + j);//удаляем указатель на этот узел из контейнера front_ptrs предка
 					break;
 				}
 			}
-			current->num--;
+			current->num--; //Уменьшаем счетчик дочерних узлов на 1, т.к. один мы удалили
 		}
-		else{
+		else{ //иначе, если символ, не подходящий под условия, является последним в строке, убираем его статус последнего символа в строке и завершаем функцию
 			if (i == s.size() - 1)
 				current->terminal = false;
 			break;
@@ -214,13 +212,12 @@ int delete_string(string s, Node* root){
 }
 ```
 
-### Вспомогательная рекурсивная функция для функции ShowBor
+### Вспомогательная рекурсивная функция для функции просмотра бора view_bor
 ```
 void recursive(Node* current, string word){
-	int i;
-	for (i = 0; i < current->front_ptrs.size(); i++){
-		if (current->front_ptrs[i] != nullptr){
-			current = current->front_ptrs[i];
+	for (int i = 0; i < current->front_ptrs.size(); i++){ //обходим всех потомков текущего узла
+		if (current->front_ptrs[i] != nullptr){ //если i-тый потомок не равен nullptr
+			current = current->front_ptrs[i]; //переходим на него и если это не корень, записываем его символ в слово word, а если он терминальный, выводим  word
 			if (current->is_root == false){
 				word.push_back(current->c);
 				if (current->terminal == true){
@@ -238,20 +235,19 @@ void recursive(Node* current, string word){
 void view_bor(Node* root){
 	Node* current = root->back_ptr; //переходим на узел перед корнем
 	string word;
-	recursive(current, word); //передаём этот узел в функцию для рекурсии
+	recursive(current, word); //передаём этот узел в рекурсивную функцию
 	cout << endl;
 }
 ```
 
 ### Поиск строки в боре
 ```
-int search_string(string s, Node* root){
+int search_string(string s, Node* root){ 
 	Node* current = root;
 	Node* ptr;
-	int i, j;
-	bool fnd = false;
-	for (i = 0; i < s.size(); i++){
-		for (j = 0; j < current->front_ptrs.size(); j++){
+	bool find = false;
+	for (int i = 0; i < s.size(); i++){
+		for (int j = 0; j < current->front_ptrs.size(); j++){ //обходим дочерние узлы (указатели) текущего узла
 			ptr = current->front_ptrs[j];
 			if (ptr == nullptr){
 				cout << "Строка не найдена" << endl << endl;
@@ -259,16 +255,16 @@ int search_string(string s, Node* root){
 			}
 			if (s[i] == ptr->c){
 				current = current->front_ptrs[j];
-				fnd = true;
+				find = true;
 				break;
 			}
 		}
-		if (fnd == false){
+		if (find == false){
 			cout << "Строка не найдена" << endl << endl;
 			return 1;
 		}
 	}
-	if (current->terminal == true){
+	if (current->terminal == true){ //когда мы прошли по всему слову и дошли до последнего символа, если он терминальный то строка найдена
 		cout << "Строка найдена" << endl << endl;
 		return 0;
 	}
@@ -279,17 +275,16 @@ int search_string(string s, Node* root){
 }
 ```
 
-### Удаление бора
+### Удаление бора (рекурсивная функция)
 ```
 void delete_bor(Node* root){
-	int i;
 	if (root != nullptr)
-		for (i = 0; i < root->front_ptrs.size(); i++){
-			if (root->front_ptrs[i]){
+		for (int i = 0; i < root->front_ptrs.size(); i++){
+			if (root->front_ptrs[i]){ //если потомок существует, рекурсивно снова запускаем для функцию
 				delete_bor(root->front_ptrs[i]);
 			}
 		}
-	delete root;
+	delete root; //освобождаем память для корневого узла после удаления всех остальных
 }
 ```
 
