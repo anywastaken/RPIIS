@@ -1,0 +1,27 @@
+# ninja log v5
+626	700	1740252857682752196	testtest	fd40b23851117193
+0	101	1740252933966566492	build.ninja	65eead8ca2e1a9fa
+2	633	1740119333783354002	CMakeFiles/testtest.dir/stack.cpp.o	7c85efa22be898bf
+6930	6954	1740120089222371000	lib/libgtest_main.a	d16686b8efe93d70
+0	626	1740252857604815568	CMakeFiles/testtest.dir/main.cpp.o	762b39288bf37512
+3	2595	1740252784987162846	Google_tests/CMakeFiles/Google_Tests_run.dir/test1.cpp.o	1dfd673e2b188cc1
+1	6037	1740120088300338197	Google_tests/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	e097b83f3676bfa4
+1	1911	1740120084173040544	Google_tests/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	61d533326d40763
+6037	6930	1740120089197885000	lib/libgtest.a	eb976c0386e937cc
+1199	1273	1740120414998368354	Google_tests/Google_Tests_run	218aebcb10fca0cb
+4	589	1740252941752216839	Google_tests/CMakeFiles/Google_Tests_run.dir/__/stack.cpp.o	a61f5af4fa8d6fd6
+589	683	1740252941847113685	Google_tests/Google_Tests_run	d03c7f6140107e48
+3	616	1740253021260396024	Google_tests/CMakeFiles/Google_Tests_run.dir/__/stack.cpp.o	a61f5af4fa8d6fd6
+616	708	1740253021354839381	Google_tests/Google_Tests_run	d03c7f6140107e48
+1	1169	1740253598043101155	CMakeFiles/testtest.dir/main.cpp.o	762b39288bf37512
+2	1169	1740253598043127446	CMakeFiles/testtest.dir/stack.cpp.o	7c85efa22be898bf
+1170	1248	1740253598125380720	testtest	fd40b23851117193
+1	599	1740253613644545668	CMakeFiles/testtest.dir/main.cpp.o	762b39288bf37512
+599	671	1740253613719013546	testtest	fd40b23851117193
+1	607	1740253654575411436	CMakeFiles/testtest.dir/main.cpp.o	762b39288bf37512
+607	679	1740253654650874665	testtest	fd40b23851117193
+1	514	1740253678323168510	CMakeFiles/testtest.dir/main.cpp.o	762b39288bf37512
+514	576	1740253678386719192	testtest	fd40b23851117193
+3	660	1740253717135976480	Google_tests/CMakeFiles/Google_Tests_run.dir/__/stack.cpp.o	a61f5af4fa8d6fd6
+3	1488	1740253717965456142	Google_tests/CMakeFiles/Google_Tests_run.dir/test1.cpp.o	1dfd673e2b188cc1
+1488	1581	1740253718062326648	Google_tests/Google_Tests_run	d03c7f6140107e48
