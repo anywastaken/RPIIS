@@ -295,36 +295,124 @@ void delete_bor(Node* root){
 Проверим работу функций добавления строки в бор, поиска строки в нем, удаление бора
 ```
 void test1() {
-	Node* root = new Node('\0'); // Создаем корень дерева
+	Node* root = new Node();
+	root->back_ptr = new Node(root);
 
 	add_string("hello", root);
-	add_string("world", root);
+	add_string("hoho", root);
 	add_string("hi", root);
-
 
 	cout << "Проверка наличия строк:" << endl;
 	cout << "hello: " << (search_string("hello", root) == 0 ? "найдена" : "не найдена") << endl;
-	cout << "world: " << (search_string("world", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "hoho: " << (search_string("hoho", root) == 0 ? "найдена" : "не найдена") << endl;
 	cout << "hi: " << (search_string("hi", root) == 0 ? "найдена" : "не найдена") << endl;
 	cout << "test: " << (search_string("test", root) == 0 ? "найдена" : "не найдена") << endl; // Не добавляли
 
 	delete_bor(root);
+	cout << "Бор удален" << endl << endl;
+
 }
 ```
 Для начала добавим в бор 3 строки: "hello", "world", "hi", а строку "test" добавлять не будем. Протестируем функцию добавления строки в бор и поиска заданной строки:
 
-![image](https://github.com/user-attachments/assets/6df2cbbc-e30a-4966-bc93-ee964e9bdcf7)
+![image](https://github.com/user-attachments/assets/48b6a769-c2a0-4584-95fd-c9fd429a26d3)
 
-Тест 1 пройден.
+Тест 1 пройден. Удаляем бор. Так как функция view_bor сработала, выведется сообщение об успешном удалении нашего бора.
+
 ### TEST 2
-Проверим работу функции 
+Проверим работу функции удаления строки из бора. Для этого создадим новый бор со строками "pioivis", "president", "pinsk". Удалbм строку president и проверим получилось ли.
+```
+void test2() {
+	Node* root = new Node();
+	root->back_ptr = new Node(root);
+
+	add_string("pioivis", root);
+	add_string("president", root);
+	add_string("pinsk", root);
+
+	cout << "Проверка наличия строк:" << endl;
+	cout << "pioivis: " << (search_string("pioivis", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "president: " << (search_string("president", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "pinsk: " << (search_string("pinsk", root) == 0 ? "найдена" : "не найдена") << endl << endl;
+
+	delete_string("president", root);
+
+	cout << "Проверка наличия строк:" << endl;
+	cout << "pioivis: " << (search_string("pioivis", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "president: " << (search_string("president", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "pinsk: " << (search_string("pinsk", root) == 0 ? "найдена" : "не найдена") << endl << endl;
+
+	delete_bor(root);
+	cout << "Бор удален" << endl << endl;
+	
+}
+```
+
+Получим
+
+![image](https://github.com/user-attachments/assets/f7e04d92-c7ae-4a70-a5d9-ccb4573d6e49)
+
+Тест 2 пройден. Удаляем бор. Так как функция view_bor сработала, выведется сообщение об успешном удалении нашего бора.
+
+### TEST 3
+Проверка работы функции просмотра бора.
+```
+void test3() {
+	Node* root = new Node();
+	root->back_ptr = new Node(root);
+
+	add_string("cambridge", root);
+	add_string("carrot", root);
+
+	cout << "Содержимое бора:" << endl;
+	view_bor(root); 
+
+	delete_bor(root);
+	cout << "Бор удален" << endl << endl;
+	
+}
+```
+
+![image](https://github.com/user-attachments/assets/c3252a23-4dde-400e-9bd0-52a1236b1400)
+
+Тест 3 пройден.
+
+### TEST 4
+Создадим бор строк "bus","soap","burn". Выведем бор. Удалим строку "bus". Проверим, есть ли в боре эта строка. Выведем бор. Удалим бор.
+
+```
+void test4() {
+	Node* root = new Node();
+	root->back_ptr = new Node(root);
+
+	add_string("bus", root);
+	add_string("soap", root);
+	add_string("burn", root);
+
+	cout << "Содержимое бора:" << endl;
+	view_bor(root);
+
+	delete_string("bus", root);
+
+	cout << "Строка bus: " << (search_string("pioivis", root) == 0 ? "найдена" : "не найдена") << endl;
+
+	cout << "Содержимое бора:" << endl;
+	view_bor(root);
 
 
+	delete_bor(root);
+	cout << "Бор удален" << endl << endl;
+}
+```
 
+Получим 
 
+![image](https://github.com/user-attachments/assets/696c9052-a3bc-4e0b-9eb9-eb14e6693b67)
+
+Тест 4 пройден.
 
 # :point_right: Выводы
-Мы организовали работу бора как структуры данных со всеми необходимыми функциямиб реализовали поставленную задачу с использованием ООП и классов на языке программирования С++.
+Мы организовали работу бора как структуры данных со всеми необходимыми функциямиб реализовали поставленную задачу с использованием ООП и классов на языке программирования С++. Разработали систему тестов, их успешным прохождением подтвердили правильную работу программы.
 Особенно полезен Бор в задачах автозаполнения, подсчета слов, поиска по префиксам и других задачах, связанных со строками.
 Результаты работы подтверждают необходимость использования Бора для программ, работающих с текстовой информацией, где важны скорость вставки, поиска и удаления данных.
 
