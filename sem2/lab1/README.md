@@ -43,8 +43,8 @@ void dobavqueue(Element*& pervyi, Element*& posled, const string& value) {
 ```
 
 <img src="https://ltdfoto.ru/images/2025/02/19/129c33cddaa474c77.png" alt="  Визуальный пример:" width="400" />
-2. **Алгоритм удаления/взятия элемента**
-   
+2. **Алгоритм удаления/взятия элемента**   
+
    Этот алгоритм удаляет первый элемент очереди, если такой имеется. В противном случае ничего не произойдет.
 ```cpp
 string vziatqueue(Element*& pervyi, Element*& posled) {
