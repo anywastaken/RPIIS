@@ -288,59 +288,40 @@ void delete_bor(Node* root){
 }
 ```
 
-Наконец, рассмотрим главный файл mainn.cpp
+Наконец, рассмотрим тесты
 -
+
+### TEST 1
+Проверим работу функций добавления строки в бор, поиска строки в нем, удаление бора
 ```
-#include <iostream>
-#include <string>
-#include "Node.h"; 
-#include "bor.h";
-using namespace std;
+void test1() {
+	Node* root = new Node('\0'); // Создаем корень дерева
+
+	add_string("hello", root);
+	add_string("world", root);
+	add_string("hi", root);
 
 
-int main(){
-	setlocale(LC_ALL, "ru");
+	cout << "Проверка наличия строк:" << endl;
+	cout << "hello: " << (search_string("hello", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "world: " << (search_string("world", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "hi: " << (search_string("hi", root) == 0 ? "найдена" : "не найдена") << endl;
+	cout << "test: " << (search_string("test", root) == 0 ? "найдена" : "не найдена") << endl; // Не добавляли
 
-	int n = 0;
-	string s;
-	Node* root = new Node();
-	root->back_ptr = new Node(root);
-
-	do{
-		cout << "Выберите действие:\n 1 - Добавить строку\n 2 - Удалить строку\n 3 - Найти строку\n 4 - Просмотреть\n 0 - Удалить бор и выйти \n" << endl;
-		cin >> n;
-
-		switch (n){
-		case 1:
-			cout << "Введите строку для добавления: ";
-			cin >> s;
-			add_string(s, root);
-			break;
-		case 2:
-			cout << "Введите строку для удаления: ";
-			cin >> s;
-			delete_string(s, root);
-			break;
-		case 3:
-			cout << "Введите строку для поиска: ";
-			cin >> s;
-			search_string(s, root);
-			break;
-		case 4:
-			cout << "------Бор------" << endl;
-			view_bor(root);
-			break;
-		case 0:
-			delete root->back_ptr;
-			delete_bor(root);
-			return 0;
-		default:
-			cout << "Нет такого действия";
-		}
-
-	} while (true);
+	delete_bor(root);
 }
 ```
+Для начала добавим в бор 3 строки: "hello", "world", "hi", а строку "test" добавлять не будем. Протестируем функцию добавления строки в бор и поиска заданной строки:
+
+![image](https://github.com/user-attachments/assets/6df2cbbc-e30a-4966-bc93-ee964e9bdcf7)
+
+Тест 1 пройден.
+### TEST 2
+Проверим работу функции 
+
+
+
+
 
 # :point_right: Выводы
 Мы организовали работу бора как структуры данных со всеми необходимыми функциямиб реализовали поставленную задачу с использованием ООП и классов на языке программирования С++.
