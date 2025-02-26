@@ -17,30 +17,222 @@
 - Множеством с кратными вхождениями элементов называют множество _S_ тогда и только тогда, когда существует _x_ такой, что истинно _S|x|_ > 1.
 - __Симметрической разностью__ множеств _A_ и _B_ с учётом кратных вхождений элементов будем называть множество _S_ тогда и только тогда, когда для любого _x_ истинно _S|x| = max{A|x|-B|x|, B|x|-A|x|}_. Выражение можно упростить: для любого _x_ истинно _S|x| = |A|x|-B|x||_ (модуль разности кратностей _x_ в множествах A и B).
 ## Реализация
-Я создал  класс Set, представляющий собой множество. Множество представляет собой обычный массив, с одним лишь отличием: порядок элементов не важен. В массиве могут храниться как обычные элементы, так и экземпляры класса Set (для этого был использован класс __std::variant__).
+Поскольку множество может содержать в себе не только обычные элементы, а еще и другие множества, а также кортежи (упорядоченные множества), я создал класс Tuple – кортеж, по сути массив (кортеж также может содержать в себе элементы, множества или другие кортежи). Для реализации кортежа, предоставляющего пользователю возможность хранить кортежи или множества произвольного уровня вложенности, был использован класс __std::variant__.
+```C++
+template<typename T>
+class Tuple
+{
+private:
+	std::variant<T, Set<T>, Tuple> *m_data; // элементы
+	size_t m_size;				// размер кортежа
+	size_t m_capacity;			// емкость (нужно для 	
+						// того, чтобы при
+						// помещениии нового
+						// элемента не 
+						// пересоздавать массив 
+						// каждый раз, что
+						// увеличит
+						// произодительность)
+};
+```
+Конструкторы (по умолчанию, копирования) и оператор присваивания:
+```C++
+Tuple()
+{
+	this->m_size = 0;
+	this->m_capacity = 1;
+	this->m_data = new std::variant<T, Set<T>, Tuple>[this->m_capacity];
+}
+
+Tuple(const Tuple &other)
+{
+	this->m_size = other.m_size;
+	this->m_capacity = other.m_capacity;
+		
+	this->m_data = new std::variant<T, Set<T>, Tuple>[this->m_capacity];
+		
+	for (size_t i = 0; i < this->m_size; i++)
+	{
+		this->m_data[i] = other.m_data[i];
+	}
+}
+
+Tuple &operator=(const Tuple &s)
+{
+	if (this != &s) // проверка на самоприсваивание
+	{
+		this->m_size = 0;
+		this->m_capacity = 0;
+			
+		delete[] m_data;
+	
+		this->m_data = nullptr;
+			
+		this->m_size = s.m_size;
+		this->m_capacity = s.m_capacity;
+			
+		this->m_data = new std::variant<T, Set<T>, Tuple>[this->m_capacity];
+			
+		for (size_t i = 0; i < this->m_size; i++)
+		{
+			this->m_data[i] = s.m_data[i];
+		}
+	}
+	return *this;
+}
+```
+Вставка элемента в кортеж производится так:
+```C++
+void insert(const std::variant<T, Set<T>, Tuple> &value)
+{
+	// создаем копию на случай добавления самого себя
+	// (м/б случай, когда необходимо расширить m_data,
+	// имеющий тот же адрес, что и value.m_data (поскольку это по
+	// сути один и тот же объект))
+	std::variant<T, Set<T>, Tuple> valueCopy = value;
+	
+	if (this->m_size == this->m_capacity)
+	{
+		this->m_capacity = this->m_capacity * 3 / 2 + 1;
+			
+		auto *dataAux = new std::variant<T, Set<T>, Tuple>[this->m_capacity];
+		for (size_t i = 0; i < this->m_size; i++)
+		{
+			dataAux[i] = this->m_data[i];
+		}
+			
+		delete[] this->m_data;
+		
+		this->m_data = dataAux;
+	}
+		
+	this->m_data[this->m_size++] = valueCopy;
+}
+```
+Операторы сравнения:
+```C++
+// определены как friend
+
+template<typename T>
+bool operator==(Tuple<T> lhs, Tuple<T> rhs)
+{
+	if (lhs.m_size == rhs.m_size)
+	{
+		for (size_t i = 0; i < lhs.m_size; i++)
+		{
+			if (lhs.m_data[i] != rhs.m_data[i])
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+template<typename T>
+bool operator!=(Tuple<T> lhs, Tuple<T> rhs)
+{
+	return !(lhs == rhs);
+}
+```
+Оператор вывода:
+```C++
+// определен как friend
+
+template<typename T>
+std::ostream & operator<<(std::ostream &out, const Tuple<T> &tuple)
+{
+	out << "< ";
+	for (size_t i = 0; i < tuple.m_size; i++)
+	{
+		try
+		{
+			T currentElement = std::get<T>(tuple.m_data[i]);
+			out << currentElement;
+		}
+		catch (const std::bad_variant_access &)
+		{
+			try
+			{
+				Set<T> currentElementSet = std::get< Set<T> >(tuple.m_data[i]);
+				out << currentElementSet;
+			}
+			catch (const std::bad_variant_access &)
+			{
+				Tuple<T> currentElementTuple = std::get< Tuple<T> >(tuple.m_data[i]);
+				out << currentElementTuple;
+			}
+		}
+		out << ' ';
+	}
+	out << ">";
+	
+	return out;
+}
+```
+Далее я создал класс Set, представляющий собой множество. Множество представляет собой обычный массив (кортеж), с одним лишь отличием: порядок элементов не важен. В массиве могут храниться обычные элементы, экземпляры класса Set и экземпляры класса Tuple (для этого также был использован класс __std::variant__).
 ```C++
 template<typename T>
 class Set
 {
 private:
-	std::variant<T, Set> *m_data; // элементы
-	size_t *m_multiplicity;       // кратность их вхождения
-	size_t m_size;                // размер массива
-	size_t m_capacity;            // емкость (нужно для того, чтобы 
-                                      // при помещениии нового элемента 
-				      // не пересоздавать массив каждый 
-				      // раз, что увеличит 
-				      // произодительность)
+	std::variant<T, Tuple<T>, Set> *m_data;
+	size_t *m_multiplicity; // кратность i-го элемента m_data.
+	size_t m_size;
+	size_t m_capacity;
 };
 ```
-Конструктор выглядит следующим образом (конструктор только по умолчанию):
+Конструкторы по умолчанию и коприования, а также оператор присваивания выглядят следующим образом:
 ```C++
 Set()
 {
 	this->m_size = 0;
 	this->m_capacity = 1;
-	this->m_data = new std::variant<T, Set>[this->m_capacity];
+	this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 	this->m_multiplicity = new size_t[m_capacity];
+}
+
+Set(const Set &other)
+{
+	this->m_size = other.m_size;
+	this->m_capacity = other.m_capacity;
+		
+	this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
+	this->m_multiplicity = new size_t[this->m_capacity];
+		
+	for (size_t i = 0; i < this->m_size; i++)
+	{
+		this->m_data[i] = other.m_data[i];
+		this->m_multiplicity[i] = other.m_multiplicity[i];
+	}
+}
+
+Set &operator=(const Set &s)
+{
+	if (this != &s)
+	{
+		this->m_size = 0;
+		this->m_capacity = 0;
+			
+		delete[] m_data;
+		delete[] m_multiplicity;
+			
+		this->m_data = nullptr;
+		this->m_multiplicity = nullptr;
+			
+		this->m_size = s.m_size;
+		this->m_capacity = s.m_capacity;
+			
+		this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
+		this->m_multiplicity = new size_t[this->m_capacity];
+			
+		for (size_t i = 0; i < this->m_size; i++)
+		{
+			this->m_data[i] = s.m_data[i];
+			this->m_multiplicity[i] = s.m_multiplicity[i];
+		}
+	}
+	return *this;
 }
 ```
 Для реализации также пришлось сделать конструктор копирования и оператор присваивания множества:
@@ -90,18 +282,14 @@ Set &operator=(const Set &s)
 	return *this;
 }
 ```
-Вставка элемента в множество выполняется следующим образом:
+Вставка элемента в множество выполняется так:
 ```C++
-/**
- * @brief Вставка элемента множества с определённой кратностью.
- *
- * @param value - элемент.
- * @param count - кратность элемента.
- */
-void insert(const std::variant<T, Set> &value, size_t count)
+void insert(const std::variant<T, Tuple<T>, Set> &value, size_t count)
 {
-	// создаем копию на случай добавления самого себя
-	std::variant<T, Set> valueCopy = value;
+	// копия value
+	std::variant<T, Tuple<T>, Set> valueCopy = value;
+
+	// увеличение кратности в случае наличия элемента во множестве
 	for (size_t i = 0; i < this->m_size; i++)
 	{
 		if (this->m_data[i] == valueCopy)
@@ -110,12 +298,13 @@ void insert(const std::variant<T, Set> &value, size_t count)
 			return;
 		}
 	}
-		
+	
 	if (this->m_size == this->m_capacity)
 	{
+		// увеличение емкости в случае необходимости
 		this->m_capacity = this->m_capacity * 3 / 2 + 1;
 			
-		auto *dataAux = new std::variant<T, Set>[this->m_capacity];
+		auto *dataAux = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 		auto *multiplicityAux = new size_t[this->m_capacity];
 		for (size_t i = 0; i < this->m_size; i++)
 		{
@@ -129,19 +318,14 @@ void insert(const std::variant<T, Set> &value, size_t count)
 		this->m_data = dataAux;
 		this->m_multiplicity = multiplicityAux;
 	}
-		
+	
+	// добавление
 	this->m_data[this->m_size++] = valueCopy;
 	this->m_multiplicity[this->m_size - 1] = count;
 }
 ```
 Получение кратности какого-либо объекта относительно множества тривиально и не требует объяснений
 ```C++
-/**
- * @brief Кратность определённого элемента множества.
- *
- * @param value - элемент.
- * @return size_t - кратность.
- */
 size_t getMultiplicity(const std::variant<T, Set> &value)
 {
 	for (size_t i = 0; i < this->m_size; i++)
@@ -157,11 +341,6 @@ size_t getMultiplicity(const std::variant<T, Set> &value)
 ```
 Также для реализации нужно знать размер массива __m_data__.
 ```C++
-/**
- * @brief Размер массива m_data.
- *
- * @return size_t размер.
- */
 size_t getSize()
 {
 	return this->m_size;
@@ -169,12 +348,7 @@ size_t getSize()
 ```
 Также, иногда нужно получать сами элементы массива __m_data__.
 ```C++
-/**
- * @brief Все элементы в массиве m_data.
- *
- * @param destination - динамический массив, куда надо записать m_data.
- */
-void getElements(std::variant<T, Set> *&destination)
+void getElements(std::variant<T, Tuple<T>, Set> *&destination)
 {
 	if (destination != nullptr)
 	{
@@ -184,7 +358,7 @@ void getElements(std::variant<T, Set> *&destination)
 		
 	if (this->m_size != 0)
 	{
-		destination = new std::variant<T, Set>[this->m_size];
+		destination = new std::variant<T, Tuple<T>, Set>[this->m_size];
 		for (size_t i = 0; i < this->m_size; i++)
 		{
 			destination[i] = this->m_data[i];
@@ -192,15 +366,8 @@ void getElements(std::variant<T, Set> *&destination)
 	}
 }
 ```
-Дальше в класс нужно было добавить проверку на принадлежность множеству
+Дальше в класс нужно было добавить проверку на принадлежность множеству (элемент принадлежит множеству, если кратность его вхождения отлична от нуля).
 ```C++
-/**
- * @brief Существует ли элемент в множестве.
- *
- * @param value - элемент.
- * @return true - если элемент найден.
- * @return false - если нет.
- */
 bool isFound(const std::variant<T, Set> &value)
 {
 	return this->getMultiplicity(value) != 0;
@@ -213,17 +380,27 @@ template<typename T>
 std::ostream & operator<<(std::ostream &out, const Set<T> &set)
 {
 	out << "{ ";
-	for (size_t i = 0; i < set.m_size; i++) {
-		for (size_t j = 0; j < set.m_multiplicity[i]; j++) {
+	for (size_t i = 0; i < set.m_size; i++)
+	{
+		for (size_t j = 0; j < set.m_multiplicity[i]; j++)
+		{
 			try
 			{
 				T currentElement = std::get<T>(set.m_data[i]);
 				out << currentElement;
 			}
-			catch (const std::bad_variant_access&)
+			catch (const std::bad_variant_access &)
 			{
-				Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
-				out << currentElementSet;
+				try
+				{
+					Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
+					out << currentElementSet;
+				}
+				catch (const std::bad_variant_access &)
+				{
+					Tuple<T> currentElementTuple = std::get< Tuple<T> >(set.m_data[i]);
+					out << currentElementTuple;
+				}
 			}
 			out << ' ';
 		}
@@ -235,19 +412,12 @@ std::ostream & operator<<(std::ostream &out, const Set<T> &set)
 ```
 Для расчета симметрической разности от двух аргументов я пользовался определением симметрической разности с учетом кратности вхождений элементов.
 ```C++
-/**
- * @brief Симметрическая разность двух множеств.
- *
- * @param a - первое множество.
- * @param b - второе множество.
- * @return Set<T> - симметрическая разность.
- */
 template<typename T>
 Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 {
 	Set<T> s;
 	
-	std::variant< T, Set<T> > *aElements = nullptr;
+	std::variant< T, Tuple<T>, Set<T> > *aElements = nullptr;
 	a.getElements(aElements);
 	for (size_t i = 0; i < a.getSize(); i++)
 	{
@@ -256,7 +426,7 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 		                  (int)b.getMultiplicity(aElements[i])));
 	}
 	
-	std::variant< T, Set<T> > *bElements = nullptr;
+	std::variant< T, Tuple<T>, Set<T> > *bElements = nullptr;
 	b.getElements(bElements);
 	for (size_t i = 0; i < b.getSize(); i++)
 	{
@@ -320,10 +490,11 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 	return !(lhs == rhs);
 }
 ```
-Всего я протестировал программу на 9 тестовых примерах, каждый из которых был пройден успешно.
+Всего я протестировал программу на 12 тестовых примерах, каждый из которых был пройден успешно.
 ```
 Тестовый пример №1:
 Входные данные:
+3
 { 1 1 2 5 5 5 6 }
 { 2 2 2 4 4 5 5 6 7 }
 { 3 4 7 9 15 }
@@ -332,6 +503,7 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №2:
 Входные данные:
+2
 { a b c }
 { c a b e e }
 Выходные данные:
@@ -339,6 +511,7 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №3:
 Входные данные:
+4
 { }
 { }
 { }
@@ -348,12 +521,14 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №4:
 Входные данные:
+1
 { 1 2 }
 Выходные данные:
 { 1 2 }
 
 Тестовый пример №5:
 Входные данные:
+2
 { 1 1 6 5 5 5 2 }
 { 2 2 2 5 5 4 4 7 6 }
 Выходные данные:
@@ -361,12 +536,14 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №6:
 Входные данные:
+1
 { { 1 2 } }
 Выходные данные:
 { { 1 2 } }
 
 Тестовый пример №7:
 Входные данные:
+2
 { 1 { 1 2 } }
 { { 1 2 } 1 }
 Выходные данные:
@@ -374,6 +551,7 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №8:
 Входные данные:
+2
 { { 1 } }
 { 1 }
 Выходные данные:
@@ -381,10 +559,35 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 
 Тестовый пример №9:
 Входные данные:
+2
 { 1 { 1 } { 1 { 1 } } }
 { 1 }
 Выходные данные:
 { { 1 } { 1 { 1 } } }
+
+Тестовый пример №10:
+Входные данные:
+2
+{ < 1 2 > }
+{ < 2 1 > }
+Выходные данные:
+{ < 1 2 > < 2 1 > }
+
+Тестовый пример №11:
+Входные данные:
+2
+{ < 1 2 > }
+{ < 1 2 > }
+Выходные данные:
+{ }
+
+Тестовый пример №12:
+Входные данные:
+2
+{ A B { C < D { E F } > G } }
+{ C { < D { E F } > C G } }
+Выходные данные:
+{ A B C }
 ```
 Все тесты были успешно пройдены:
 ![Тесты пройдены](images/unittestspassed.png)
