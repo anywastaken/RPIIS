@@ -39,6 +39,11 @@ public:
 		this->m_multiplicity = new size_t[m_capacity];
 	}
 	
+	/**
+	 * @brief Конструктор копирования для Set.
+	 * 
+	 * @param other копируемый объект Set.
+	 */
 	Set(const Set &other)
 	{
 		this->m_size = other.m_size;

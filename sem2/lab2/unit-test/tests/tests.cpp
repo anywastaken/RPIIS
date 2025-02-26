@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <gtest/gtest.h>
-
 #include "SymmetricalDifference.hpp"
 
 TEST(SymmetricalDifferenceTest, Test1)

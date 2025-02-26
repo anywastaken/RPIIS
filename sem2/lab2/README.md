@@ -17,19 +17,20 @@
 - Множеством с кратными вхождениями элементов называют множество _S_ тогда и только тогда, когда существует _x_ такой, что истинно _S|x|_ > 1.
 - __Симметрической разностью__ множеств _A_ и _B_ с учётом кратных вхождений элементов будем называть множество _S_ тогда и только тогда, когда для любого _x_ истинно _S|x| = max{A|x|-B|x|, B|x|-A|x|}_. Выражение можно упростить: для любого _x_ истинно _S|x| = |A|x|-B|x||_ (модуль разности кратностей _x_ в множествах A и B).
 ## Реализация
-Я создал  класс Set, представляющий собой множество. Множество представляет собой обычный массив, с одним лишь отличием: порядок элементов не важен.
+Я создал  класс Set, представляющий собой множество. Множество представляет собой обычный массив, с одним лишь отличием: порядок элементов не важен. В массиве могут храниться как обычные элементы, так и экземпляры класса Set (для этого был использован класс __std::variant__).
 ```C++
 template<typename T>
 class Set
 {
 private:
-	T *m_data;              // элементы
-	size_t *m_multiplicity; // кратность их вхождения
-	size_t m_size;          // размер массива
-	size_t m_capacity;      // емкость (нужно для того, чтобы при
-                                // помещениии нового элемента не пересоздавать
-                                // массив каждый раз, что увеличит
-                                // произодительность)
+	std::variant<T, Set> *m_data; // элементы
+	size_t *m_multiplicity;       // кратность их вхождения
+	size_t m_size;                // размер массива
+	size_t m_capacity;            // емкость (нужно для того, чтобы 
+                                      // при помещениии нового элемента 
+				      // не пересоздавать массив каждый 
+				      // раз, что увеличит 
+				      // произодительность)
 };
 ```
 Конструктор выглядит следующим образом (конструктор только по умолчанию):
@@ -38,12 +39,27 @@ Set()
 {
 	this->m_size = 0;
 	this->m_capacity = 1;
-	this->m_data = new T[this->m_capacity];
+	this->m_data = new std::variant<T, Set>[this->m_capacity];
 	this->m_multiplicity = new size_t[m_capacity];
 }
 ```
-Для реализации также пришлось сделать оператор присваивания множества:
+Для реализации также пришлось сделать конструктор копирования и оператор присваивания множества:
 ```C++
+Set(const Set &other)
+{
+	this->m_size = other.m_size;
+	this->m_capacity = other.m_capacity;
+
+	this->m_data = new std::variant<T, Set>[this->m_capacity];
+	this->m_multiplicity = new size_t[this->m_capacity];
+
+	for (size_t i = 0; i < this->m_size; i++)
+	{
+		this->m_data[i] = other.m_data[i];
+		this->m_multiplicity[i] = other.m_multiplicity[i];
+	}
+}
+
 Set &operator=(const Set &s)
 {
 	if (this != &s) // проверка на самоприсваивание
@@ -62,7 +78,7 @@ Set &operator=(const Set &s)
 		this->m_size = s.m_size;
 		this->m_capacity = s.m_capacity;
 			
-		this->m_data = new T[this->m_capacity];
+		this->m_data = new std::variant<T, Set>[this->m_capacity];
 		this->m_multiplicity = new size_t[this->m_capacity];
 		
 		for (size_t i = 0; i < this->m_size; i++)
@@ -82,41 +98,39 @@ Set &operator=(const Set &s)
  * @param value - элемент.
  * @param count - кратность элемента.
  */
-void insert(const T &value, size_t count)
+void insert(const std::variant<T, Set> &value, size_t count)
 {
+	// создаем копию на случай добавления самого себя
+	std::variant<T, Set> valueCopy = value;
 	for (size_t i = 0; i < this->m_size; i++)
 	{
-		if (this->m_data[i] == value)
+		if (this->m_data[i] == valueCopy)
 		{
-                        // увеличиваем кратность если элемент существует
 			this->m_multiplicity[i] += count;
 			return;
 		}
 	}
-	
+		
 	if (this->m_size == this->m_capacity)
 	{
-                // если емкости не хватает то пересоздаем массив с новым
-                // значением емкости
 		this->m_capacity = this->m_capacity * 3 / 2 + 1;
-		
-		T *dataAux = new T[this->m_capacity];
+			
+		auto *dataAux = new std::variant<T, Set>[this->m_capacity];
 		auto *multiplicityAux = new size_t[this->m_capacity];
 		for (size_t i = 0; i < this->m_size; i++)
 		{
 			dataAux[i] = this->m_data[i];
 			multiplicityAux[i] = this->m_multiplicity[i];
 		}
-		
+			
 		delete[] this->m_data;
 		delete[] this->m_multiplicity;
-		
+			
 		this->m_data = dataAux;
 		this->m_multiplicity = multiplicityAux;
 	}
-	
-        // создаем новый элемент
-        this->m_data[this->m_size++] = value;
+		
+	this->m_data[this->m_size++] = valueCopy;
 	this->m_multiplicity[this->m_size - 1] = count;
 }
 ```
@@ -128,7 +142,7 @@ void insert(const T &value, size_t count)
  * @param value - элемент.
  * @return size_t - кратность.
  */
-size_t getMultiplicity(const T &value)
+size_t getMultiplicity(const std::variant<T, Set> &value)
 {
 	for (size_t i = 0; i < this->m_size; i++)
 	{
@@ -137,14 +151,14 @@ size_t getMultiplicity(const T &value)
 			return this->m_multiplicity[i];
 		}
 	}
-	
+		
 	return 0;
 }
 ```
 Также для реализации нужно знать размер массива __m_data__.
 ```C++
 /**
- * @brief Размер множества.
+ * @brief Размер массива m_data.
  *
  * @return size_t размер.
  */
@@ -156,12 +170,11 @@ size_t getSize()
 Также, иногда нужно получать сами элементы массива __m_data__.
 ```C++
 /**
- * @brief Все элементы множества в динамическом массиве.
+ * @brief Все элементы в массиве m_data.
  *
- * @param destination - динамический массив, куда надо записать множес-
- *                      тво.
+ * @param destination - динамический массив, куда надо записать m_data.
  */
-void getElements(T *&destination)
+void getElements(std::variant<T, Set> *&destination)
 {
 	if (destination != nullptr)
 	{
@@ -171,7 +184,7 @@ void getElements(T *&destination)
 		
 	if (this->m_size != 0)
 	{
-		destination = new T[this->m_size];
+		destination = new std::variant<T, Set>[this->m_size];
 		for (size_t i = 0; i < this->m_size; i++)
 		{
 			destination[i] = this->m_data[i];
@@ -179,7 +192,7 @@ void getElements(T *&destination)
 	}
 }
 ```
-И последнее, что нужно было добавить в класс Set – это проверку на принадлежность множеству
+Дальше в класс нужно было добавить проверку на принадлежность множеству
 ```C++
 /**
  * @brief Существует ли элемент в множестве.
@@ -188,12 +201,39 @@ void getElements(T *&destination)
  * @return true - если элемент найден.
  * @return false - если нет.
  */
-bool isFound(const T &value)
+bool isFound(const std::variant<T, Set> &value)
 {
 	return this->getMultiplicity(value) != 0;
 }
 ```
-Для расчета симметрической разности от двух элементов я пользовался определением симметрической разности с учетом кратности вхождений элементов.
+И последнее, что я добавил – это оператор вывода.
+```C++
+// friend-функция класса.
+template<typename T>
+std::ostream & operator<<(std::ostream &out, const Set<T> &set)
+{
+	out << "{ ";
+	for (size_t i = 0; i < set.m_size; i++) {
+		for (size_t j = 0; j < set.m_multiplicity[i]; j++) {
+			try
+			{
+				T currentElement = std::get<T>(set.m_data[i]);
+				out << currentElement;
+			}
+			catch (const std::bad_variant_access&)
+			{
+				Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
+				out << currentElementSet;
+			}
+			out << ' ';
+		}
+	}
+	out << "}";
+	
+	return out;
+}
+```
+Для расчета симметрической разности от двух аргументов я пользовался определением симметрической разности с учетом кратности вхождений элементов.
 ```C++
 /**
  * @brief Симметрическая разность двух множеств.
@@ -207,7 +247,7 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 {
 	Set<T> s;
 	
-	T *aElements = nullptr;
+	std::variant< T, Set<T> > *aElements = nullptr;
 	a.getElements(aElements);
 	for (size_t i = 0; i < a.getSize(); i++)
 	{
@@ -216,7 +256,7 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 		                  (int)b.getMultiplicity(aElements[i])));
 	}
 	
-	T *bElements = nullptr;
+	std::variant< T, Set<T> > *bElements = nullptr;
 	b.getElements(bElements);
 	for (size_t i = 0; i < b.getSize(); i++)
 	{
@@ -280,7 +320,7 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 	return !(lhs == rhs);
 }
 ```
-Всего я протестировал программу на 6 тестовых примерах, каждый их которых был пройден успешно.
+Всего я протестировал программу на 9 тестовых примерах, каждый из которых был пройден успешно.
 ```
 Тестовый пример №1:
 Входные данные:
@@ -324,140 +364,30 @@ bool operator!=(Set<T> lhs, Set<T> rhs)
 { { 1 2 } }
 Выходные данные:
 { { 1 2 } }
+
+Тестовый пример №7:
+Входные данные:
+{ 1 { 1 2 } }
+{ { 1 2 } 1 }
+Выходные данные:
+{ }
+
+Тестовый пример №8:
+Входные данные:
+{ { 1 } }
+{ 1 }
+Выходные данные:
+{ 1 { 1 } }
+
+Тестовый пример №9:
+Входные данные:
+{ 1 { 1 } { 1 { 1 } } }
+{ 1 }
+Выходные данные:
+{ { 1 } { 1 { 1 } } }
 ```
 Все тесты были успешно пройдены:
 ![Тесты пройдены](images/unittestspassed.png)
-Код для unit-тестов:
-```C++
-#include <gtest/gtest.h>
-
-#include "SymmetricalDifference.hpp"
-
-TEST(SymmetricalDifferenceTest, Test1)
-{
-	Set<int> s[3];
-	
-	s[0].insert(1, 2);
-	s[0].insert(2, 1);
-	s[0].insert(5, 3);
-	s[0].insert(6, 1);
-	
-	s[1].insert(2, 3);
-	s[1].insert(4, 2);
-	s[1].insert(5, 2);
-	s[1].insert(6, 1);
-	s[1].insert(7, 1);
-	
-	s[2].insert(3, 1);
-	s[2].insert(4, 1);
-	s[2].insert(7, 1);
-	s[2].insert(9, 1);
-	s[2].insert(15, 1);
-	
-	Set<int> expectedResult;
-	expectedResult.insert(1, 2);
-	expectedResult.insert(2, 2);
-	expectedResult.insert(3, 1);
-	expectedResult.insert(4, 1);
-	expectedResult.insert(5, 1);
-	expectedResult.insert(9, 1);
-	expectedResult.insert(15, 1);
-	
-	ASSERT_EQ(symmetricalDifference(s, 3), expectedResult);
-}
-
-TEST(SymmetricalDifferenceTest, Test2)
-{
-	Set<char> s[2];
-	
-	s[0].insert('a', 1);
-	s[0].insert('b', 1);
-	s[0].insert('c', 1);
-	
-	s[1].insert('c', 1);
-	s[1].insert('b', 1);
-	s[1].insert('a', 1);
-	s[1].insert('e', 2);
-	
-	Set<char> expectedResult;
-	expectedResult.insert('e', 2);
-	
-	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
-}
-
-TEST(SymmetricalDifferenceTest, Test3)
-{
-	Set<float> s[4];
-	
-	Set<float> expectedResult;
-	
-	ASSERT_EQ(symmetricalDifference(s, 4), expectedResult);
-}
-
-TEST(SymmetricalDifferenceTest, Test4)
-{
-	Set<int> s[1];
-	
-	s[0].insert(1, 1);
-	s[0].insert(2, 1);
-	
-	Set<int> expectedResult;
-	expectedResult.insert(1, 1);
-	expectedResult.insert(2, 1);
-	
-	ASSERT_EQ(symmetricalDifference(s, 1), expectedResult);
-}
-
-TEST(SymmetricalDifferenceTest, Test5)
-{
-	Set<int> s[2];
-	
-	s[0].insert(1, 2);
-	s[0].insert(6, 1);
-	s[0].insert(5, 3);
-	s[0].insert(2, 1);
-	
-	s[1].insert(2, 3);
-	s[1].insert(5, 2);
-	s[1].insert(4, 2);
-	s[1].insert(7, 1);
-	s[1].insert(6, 1);
-	
-	Set<int> expectedResult;
-	expectedResult.insert(2, 2);
-	expectedResult.insert(4, 2);
-	expectedResult.insert(1, 2);
-	expectedResult.insert(7, 1);
-	expectedResult.insert(5, 1);
-}
-
-TEST(SymmetricalDifferenceTest, Test6)
-{
-	Set< Set<int> > s[1];
-	
-	Set<int> ss;
-	ss.insert(1, 1);
-	ss.insert(2, 1);
-	
-	s[0].insert(ss, 1);
-	
-	Set< Set<int> > expectedResult;
-	
-	Set<int> ssExpected;
-	ssExpected.insert(1, 1);
-	ssExpected.insert(2, 1);
-	
-	expectedResult.insert(ssExpected, 1);
-	
-	ASSERT_EQ(symmetricalDifference(s, 1), expectedResult);
-}
-
-int main(int argc, char *argv[])
-{
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
-```
 ## Вывод
 В ходе данной лабораторной работы я:
 - Научился работать с множествами
