@@ -1,0 +1,3 @@
+niger={4,a,ad1,MEGA,c}
+AB={1,c,2,{a,b,c,d,MEGA},{3,4},7,a}
+MEGA={a,b,c,d,MEGA}
