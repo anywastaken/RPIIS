@@ -1,5 +1,5 @@
 /******************************************************************************
-    Название:    main.cpp
+    Название:    SymmetricalDifference.cpp
     Разработчик: Вашкевич Максим Викторович
     Дата:        18.02.2024
     Описание:    программа получает через консольные параметры имя файла, чита-
@@ -14,6 +14,7 @@
 #include <string>    // std::string
 #include <exception> // std::exception
 
+#include "Tuple.hpp"
 #include "Set.hpp"
 #include "SymmetricalDifference.hpp"
 
@@ -26,8 +27,8 @@
 size_t getSetsCount(std::istream &in)
 {
 	std::string setsCountStr;
-	getline(in, setsCountStr);
-
+	std::getline(in, setsCountStr);
+	
 	long long setsCount = 0;
 	try
 	{
@@ -43,7 +44,7 @@ size_t getSetsCount(std::istream &in)
 		             "\n";
 		exit(EXIT_FAILURE);
 	}
-
+	
 	return (size_t)setsCount;
 }
 
@@ -65,6 +66,86 @@ size_t findClosestClosingBrace(const std::string &s, size_t idx)
 		}
 	}
 	return std::string::npos;
+}
+
+size_t findClosestClosingAngleBracket(const std::string &s, size_t idx)
+{
+	for (size_t i = idx; i < s.size(); i++)
+	{
+		if (s[i] == '>')
+		{
+			return i;
+		}
+	}
+	return std::string::npos;
+}
+
+Set<int> getSetByString(std::string &, size_t);
+
+Tuple<int> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
+{
+	Tuple<int> t;
+	std::string currentValue;
+	for (size_t i = beginIdx; i < tupleStr.size(); i++)
+	{
+		if (tupleStr[i] == ' ')
+		{
+			if (currentValue == "<")
+			{
+				t.insert(getTupleByString(tupleStr, i + 1));
+				tupleStr.erase(i - 1, findClosestClosingAngleBracket(tupleStr, i) - i + 3);
+				i -= 2;
+				// i = findKthClosingBrace(setStr, i, level) + 1;
+			}
+			else if (currentValue == ">")
+			{
+				return t;
+			}
+			else if (currentValue == "{")
+			{
+				t.insert(getSetByString(tupleStr, i + 1));
+				tupleStr.erase(i - 1, findClosestClosingBrace(tupleStr, i) - i + 3);
+				i -= 2;
+			}
+			else
+			{
+				int currentElement = 0;
+				try
+				{
+					currentElement = std::stoi(currentValue);
+				}
+				catch (const std::exception &ex)
+				{
+					std::cout << "The tuple is invalid! Please, fix the file.\n";
+					exit(EXIT_FAILURE);
+				}
+				
+				t.insert(currentElement);
+			}
+			currentValue.clear();
+		}
+		else
+		{
+			currentValue.push_back(tupleStr[i]);
+		}
+	}
+	
+	if (!currentValue.empty() && currentValue != ">")
+	{
+		int lastElement = 0;
+		try
+		{
+			lastElement = std::stoi(currentValue);
+		}
+		catch (const std::exception &ex)
+		{
+			std::cout << "The tuple is invalid! Please, fix the file.\n";
+			exit(EXIT_FAILURE);
+		}
+		t.insert(lastElement);
+	}
+	
+	return t;
 }
 
 /**
@@ -93,6 +174,12 @@ Set<int> getSetByString(std::string &setStr, size_t beginIdx = 0)
 			else if (currentValue == "}")
 			{
 				return s;
+			}
+			else if (currentValue == "<")
+			{
+				s.insert(getTupleByString(setStr, i + 1), 1);
+				setStr.erase(i - 1, findClosestClosingAngleBracket(setStr, i) - i + 3);
+				i -= 2;
 			}
 			else
 			{
@@ -158,11 +245,11 @@ Set<int> getNextSet(std::istream &in)
 int main([[maybe_unused]]int argc, const char *argv[])
 {
 	const std::string FILE_PATH = argv[1];
+	
 	Set<int> result;
 	
 	std::ifstream fin(FILE_PATH);
 	size_t setsCount = getSetsCount(fin);
-	// std::cout << setsCount << '\n';
 	for (size_t i = 0; i < setsCount; i++)
 	{
 		Set<int> currentSet = getNextSet(fin);

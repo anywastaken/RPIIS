@@ -14,6 +14,11 @@
 #include <variant>
 #include <ostream>
 
+#include "Tuple.hpp"
+
+template<typename T>
+class Tuple;
+
 /**
  * @brief Класс-множество.
  *
@@ -23,7 +28,7 @@ template<typename T>
 class Set
 {
 private:
-	std::variant<T, Set> *m_data;
+	std::variant<T, Tuple<T>, Set> *m_data;
 	size_t *m_multiplicity;
 	size_t m_size;
 	size_t m_capacity;
@@ -35,23 +40,23 @@ public:
 	{
 		this->m_size = 0;
 		this->m_capacity = 1;
-		this->m_data = new std::variant<T, Set>[this->m_capacity];
+		this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 		this->m_multiplicity = new size_t[m_capacity];
 	}
 	
 	/**
 	 * @brief Конструктор копирования для Set.
-	 * 
+	 *
 	 * @param other копируемый объект Set.
 	 */
 	Set(const Set &other)
 	{
 		this->m_size = other.m_size;
 		this->m_capacity = other.m_capacity;
-
-		this->m_data = new std::variant<T, Set>[this->m_capacity];
+		
+		this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 		this->m_multiplicity = new size_t[this->m_capacity];
-
+		
 		for (size_t i = 0; i < this->m_size; i++)
 		{
 			this->m_data[i] = other.m_data[i];
@@ -81,7 +86,7 @@ public:
 			this->m_size = s.m_size;
 			this->m_capacity = s.m_capacity;
 			
-			this->m_data = new std::variant<T, Set>[this->m_capacity];
+			this->m_data = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 			this->m_multiplicity = new size_t[this->m_capacity];
 			
 			for (size_t i = 0; i < this->m_size; i++)
@@ -99,9 +104,9 @@ public:
 	 * @param value - элемент.
 	 * @param count - кратность элемента.
 	 */
-	void insert(const std::variant<T, Set> &value, size_t count)
+	void insert(const std::variant<T, Tuple<T>, Set> &value, size_t count)
 	{
-		std::variant<T, Set> valueCopy = value;
+		std::variant<T, Tuple<T>, Set> valueCopy = value;
 		for (size_t i = 0; i < this->m_size; i++)
 		{
 			if (this->m_data[i] == valueCopy)
@@ -115,7 +120,7 @@ public:
 		{
 			this->m_capacity = this->m_capacity * 3 / 2 + 1;
 			
-			auto *dataAux = new std::variant<T, Set>[this->m_capacity];
+			auto *dataAux = new std::variant<T, Tuple<T>, Set>[this->m_capacity];
 			auto *multiplicityAux = new size_t[this->m_capacity];
 			for (size_t i = 0; i < this->m_size; i++)
 			{
@@ -140,7 +145,7 @@ public:
 	 * @param value - элемент.
 	 * @return size_t - кратность.
 	 */
-	size_t getMultiplicity(const std::variant<T, Set> &value)
+	size_t getMultiplicity(const std::variant<T, Tuple<T>, Set> &value)
 	{
 		for (size_t i = 0; i < this->m_size; i++)
 		{
@@ -168,7 +173,7 @@ public:
 	 *
 	 * @param destination - динамический массив, куда надо записать m_data.
 	 */
-	void getElements(std::variant<T, Set> *&destination)
+	void getElements(std::variant<T, Tuple<T>, Set> *&destination)
 	{
 		if (destination != nullptr)
 		{
@@ -178,7 +183,7 @@ public:
 		
 		if (this->m_size != 0)
 		{
-			destination = new std::variant<T, Set>[this->m_size];
+			destination = new std::variant<T, Tuple<T>, Set>[this->m_size];
 			for (size_t i = 0; i < this->m_size; i++)
 			{
 				destination[i] = this->m_data[i];
@@ -193,7 +198,7 @@ public:
 	 * @return true - если элемент найден.
 	 * @return false - если нет.
 	 */
-	bool isFound(const std::variant<T, Set> &value)
+	bool isFound(const std::variant<T, Tuple<T>, Set> &value)
 	{
 		return this->getMultiplicity(value) != 0;
 	}
@@ -244,17 +249,27 @@ template<typename T>
 std::ostream & operator<<(std::ostream &out, const Set<T> &set)
 {
 	out << "{ ";
-	for (size_t i = 0; i < set.m_size; i++) {
-		for (size_t j = 0; j < set.m_multiplicity[i]; j++) {
+	for (size_t i = 0; i < set.m_size; i++)
+	{
+		for (size_t j = 0; j < set.m_multiplicity[i]; j++)
+		{
 			try
 			{
 				T currentElement = std::get<T>(set.m_data[i]);
 				out << currentElement;
 			}
-			catch (const std::bad_variant_access&)
+			catch (const std::bad_variant_access &)
 			{
-				Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
-				out << currentElementSet;
+				try
+				{
+					Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
+					out << currentElementSet;
+				}
+				catch (const std::bad_variant_access &)
+				{
+					Tuple<T> currentElementTuple = std::get< Tuple<T> >(set.m_data[i]);
+					out << currentElementTuple;
+				}
 			}
 			out << ' ';
 		}

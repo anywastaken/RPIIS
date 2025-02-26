@@ -2,6 +2,7 @@
 #define SYMMETRICAL_DIFFERENCE_HPP
 
 #include "Set.hpp"
+#include "Tuple.hpp"
 
 /**
  * @brief Симметрическая разность двух множеств.
@@ -15,7 +16,7 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 {
 	Set<T> s;
 	
-	std::variant< T, Set<T> > *aElements = nullptr;
+	std::variant< T, Tuple<T>, Set<T> > *aElements = nullptr;
 	a.getElements(aElements);
 	for (size_t i = 0; i < a.getSize(); i++)
 	{
@@ -24,7 +25,7 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 		                  (int)b.getMultiplicity(aElements[i])));
 	}
 	
-	std::variant< T, Set<T> > *bElements = nullptr;
+	std::variant< T, Tuple<T>, Set<T> > *bElements = nullptr;
 	b.getElements(bElements);
 	for (size_t i = 0; i < b.getSize(); i++)
 	{

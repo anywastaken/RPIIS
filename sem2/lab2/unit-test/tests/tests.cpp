@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <gtest/gtest.h>
+
 #include "SymmetricalDifference.hpp"
 
 TEST(SymmetricalDifferenceTest, Test1)
@@ -180,6 +182,83 @@ TEST(SymmetricalDifferenceTest, Test9)
 	expectedResult.insert(ss1, 1);
 	
 	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test10)
+{
+	Set<int> s[2];
+	
+	Tuple<int> s0t;
+	s0t.insert(1);
+	s0t.insert(2);
+	
+	s[0].insert(s0t, 1);
+	
+	Tuple<int> s1t;
+	s1t.insert(2);
+	s1t.insert(1);
+	
+	s[1].insert(s1t, 1);
+	
+	Set<int> expectedResult;
+	expectedResult.insert(s0t, 1);
+	expectedResult.insert(s1t, 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test11)
+{
+	Set<int> s[2];
+	
+	Tuple<int> s0t;
+	s0t.insert(1);
+	s0t.insert(2);
+	
+	s[0].insert(s0t, 1);
+	
+	Tuple<int> s1t;
+	s1t.insert(1);
+	s1t.insert(2);
+	
+	s[1].insert(s1t, 1);
+	
+	Set<int> expectedResult;
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test12)
+{
+	Set<char> s[2];
+	s[0].insert('A', 1);
+	s[0].insert('B', 1);
+	
+	Set<char> s0s;
+	s0s.insert('C', 1);
+	
+	Tuple<char> s0st;
+	s0st.insert('D');
+	
+	Set<char> s0sts;
+	s0sts.insert('E', 1);
+	s0sts.insert('F', 1);
+	
+	s0st.insert(s0sts);
+	
+	s0s.insert(s0st, 1);
+	s0s.insert('G', 1);
+	s[0].insert(s0s, 1);
+	
+	s[1].insert('C', 1);
+	s[1].insert(s0s, 1);
+	
+	Set<char> expectedValue;
+	expectedValue.insert('A', 1);
+	expectedValue.insert('B', 1);
+	expectedValue.insert('C', 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedValue);
 }
 
 int main(int argc, char *argv[])
