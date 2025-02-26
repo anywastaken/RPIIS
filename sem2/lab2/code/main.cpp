@@ -80,11 +80,11 @@ size_t findClosestClosingAngleBracket(const std::string &s, size_t idx)
 	return std::string::npos;
 }
 
-Set<int> getSetByString(std::string &, size_t);
+Set<std::string> getSetByString(std::string &, size_t);
 
-Tuple<int> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
+Tuple<std::string> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
 {
-	Tuple<int> t;
+	Tuple<std::string> t;
 	std::string currentValue;
 	for (size_t i = beginIdx; i < tupleStr.size(); i++)
 	{
@@ -109,18 +109,7 @@ Tuple<int> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
 			}
 			else
 			{
-				int currentElement = 0;
-				try
-				{
-					currentElement = std::stoi(currentValue);
-				}
-				catch (const std::exception &ex)
-				{
-					std::cout << "The tuple is invalid! Please, fix the file.\n";
-					exit(EXIT_FAILURE);
-				}
-				
-				t.insert(currentElement);
+				t.insert(currentValue);
 			}
 			currentValue.clear();
 		}
@@ -132,17 +121,7 @@ Tuple<int> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
 	
 	if (!currentValue.empty() && currentValue != ">")
 	{
-		int lastElement = 0;
-		try
-		{
-			lastElement = std::stoi(currentValue);
-		}
-		catch (const std::exception &ex)
-		{
-			std::cout << "The tuple is invalid! Please, fix the file.\n";
-			exit(EXIT_FAILURE);
-		}
-		t.insert(lastElement);
+		t.insert(currentValue);
 	}
 	
 	return t;
@@ -156,9 +135,9 @@ Tuple<int> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
  *
  * @return Set<int> - множество.
  */
-Set<int> getSetByString(std::string &setStr, size_t beginIdx = 0)
+Set<std::string> getSetByString(std::string &setStr, size_t beginIdx = 0)
 {
-	Set<int> s;
+	Set<std::string> s;
 	std::string currentValue;
 	for (size_t i = beginIdx; i < setStr.size(); i++)
 	{
@@ -183,18 +162,7 @@ Set<int> getSetByString(std::string &setStr, size_t beginIdx = 0)
 			}
 			else
 			{
-				int currentElement = 0;
-				try
-				{
-					currentElement = std::stoi(currentValue);
-				}
-				catch (const std::exception &ex)
-				{
-					std::cout << "The set is invalid! Please, fix the file.\n";
-					exit(EXIT_FAILURE);
-				}
-				
-				s.insert(currentElement, 1);
+				s.insert(currentValue, 1);
 			}
 			currentValue.clear();
 		}
@@ -210,15 +178,7 @@ Set<int> getSetByString(std::string &setStr, size_t beginIdx = 0)
 	}
 	if (!currentValue.empty())
 	{
-		int lastElement = 0;
-		try {
-			lastElement = std::stoi(currentValue);
-		}
-		catch (const std::exception &ex) {
-			std::cout << "The set is invalid! Please, fix the file.\n";
-			exit(EXIT_FAILURE);
-		}
-		s.insert(lastElement, 1);
+		s.insert(currentValue, 1);
 	}
 	
 	return s;
@@ -230,15 +190,25 @@ Set<int> getSetByString(std::string &setStr, size_t beginIdx = 0)
  * @param in - поток ввода
  * @return Set<int> - следующее множество.
  */
-Set<int> getNextSet(std::istream &in)
+Set<std::string> getNextSet(std::istream &in)
 {
 	std::string setStr;
 	getline(in, setStr);
-	setStr.erase(setStr.begin());
+	if (setStr.front() != '{' || setStr.back() != '}')
+	{
+		std::cout << "The set is invalid. Please, fix the file.\n";
+		exit(EXIT_FAILURE);
+	}
 	setStr.erase(setStr.begin());
 	setStr.pop_back();
+	if (setStr.front() != ' ' || setStr.back() != ' ')
+	{
+		std::cout << "The set is invalid. Please, fix the file.\n";
+		exit(EXIT_FAILURE);
+	}
+	setStr.erase(setStr.begin());
 	setStr.pop_back();
-	Set<int> s = getSetByString(setStr);
+	Set<std::string> s = getSetByString(setStr);
 	return s;
 }
 
@@ -246,13 +216,13 @@ int main([[maybe_unused]]int argc, const char *argv[])
 {
 	const std::string FILE_PATH = argv[1];
 	
-	Set<int> result;
+	Set<std::string> result;
 	
 	std::ifstream fin(FILE_PATH);
 	size_t setsCount = getSetsCount(fin);
 	for (size_t i = 0; i < setsCount; i++)
 	{
-		Set<int> currentSet = getNextSet(fin);
+		Set<std::string> currentSet = getNextSet(fin);
 		// std::cout << currentSet << '\n';
 		
 		result = symmetricalDifference(result, currentSet);
