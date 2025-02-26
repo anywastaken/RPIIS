@@ -101,10 +101,7 @@ TEST(RemoveDuplicatesTest, RemovesDuplicates) {
 
 	remove_duplicates(test_unique);
 
-	for (const auto& el : test_unique) {
-		std::cout << el << ' ';
-	}
-	std::cout << std::endl;
+
 	EXPECT_EQ(test_unique.size(), 8);
 
 	EXPECT_EQ(test_unique[0], "a");
@@ -122,7 +119,6 @@ TEST(RemoveDuplicatesTest, RemovesDuplicates) {
 }
 
 int main(int argc, char** argv) {
-	// Initialize the Google Test framework
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
