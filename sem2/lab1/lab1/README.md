@@ -85,4 +85,4 @@
 1. Алгоритмы: построение и анализ, 2-е издание. : Пер. с англ. – М. :
 Издательский дом «Вильямс», 2005. – 1296 с.
 
-2. [https://github.com/iis-32170x/RPIIS/blob/017a7f06ed1c466f96d403985db294e5d178487c/sem2/lab1/rbtree.cpp)))))](https://habr.com/ru/companies/otus/articles/521034/)
+2. [https://habr.com/ru/companies/otus/articles/521034/](https://habr.com/ru/companies/otus/articles/521034/)
