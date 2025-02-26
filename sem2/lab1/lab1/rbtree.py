@@ -254,7 +254,7 @@ class RedBlackTree:
                     x = self._root
         x.color = Color.BLACK
 
-    def find_min(self, node: RedBlackNode = None) -> RedBlackNode | None:
+    def find_min(self, node: RedBlackNode = None) -> RedBlackNode:
         if node is None:
             current = self._root
         else:
@@ -272,7 +272,7 @@ class RedBlackTree:
             current = current.right
         return current
 
-    def find_nearest_max(self, key: int) -> RedBlackNode | None:
+    def find_nearest_max(self, key: int) -> RedBlackNode:
         node = self.search(key)
         if node is None:
             return
@@ -285,7 +285,7 @@ class RedBlackTree:
                     raise OverallValue(msg=f"Элемент с ключом {key} наибольший")
             return node.parent
 
-    def find_nearest_min(self, key: int) -> RedBlackNode | None:
+    def find_nearest_min(self, key: int) -> RedBlackNode:
         node = self.search(key)
         if node is None:
             return
@@ -322,12 +322,3 @@ class RedBlackTree:
         if left_check and right_check:
             return len(set(black_counts)) == 1
         return False
-
-
-tree = RedBlackTree()
-for i in range(10, 0, -1):
-    tree.insert(i)
-# print(tree.find_max(), tree.find_min(), sep="\n")
-tree.insert(11, None)
-tree.pre_order_traversal()
-print(tree.check_properties(tree.root))
