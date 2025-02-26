@@ -11,6 +11,8 @@
 #define SET_HPP
 
 #include <cstdlib>
+#include <variant>
+#include <ostream>
 
 /**
  * @brief Класс-множество.
@@ -21,7 +23,7 @@ template<typename T>
 class Set
 {
 private:
-	T *m_data;
+	std::variant<T, Set> *m_data;
 	size_t *m_multiplicity;
 	size_t m_size;
 	size_t m_capacity;
@@ -33,7 +35,7 @@ public:
 	{
 		this->m_size = 0;
 		this->m_capacity = 1;
-		this->m_data = new T[this->m_capacity];
+		this->m_data = new std::variant<T, Set>[this->m_capacity];
 		this->m_multiplicity = new size_t[m_capacity];
 	}
 	
@@ -59,7 +61,7 @@ public:
 			this->m_size = s.m_size;
 			this->m_capacity = s.m_capacity;
 			
-			this->m_data = new T[this->m_capacity];
+			this->m_data = new std::variant<T, Set>[this->m_capacity];
 			this->m_multiplicity = new size_t[this->m_capacity];
 			
 			for (size_t i = 0; i < this->m_size; i++)
@@ -77,7 +79,7 @@ public:
 	 * @param value - элемент.
 	 * @param count - кратность элемента.
 	 */
-	void insert(const T &value, size_t count)
+	void insert(const std::variant<T, Set> &value, size_t count)
 	{
 		for (size_t i = 0; i < this->m_size; i++)
 		{
@@ -92,7 +94,7 @@ public:
 		{
 			this->m_capacity = this->m_capacity * 3 / 2 + 1;
 			
-			T *dataAux = new T[this->m_capacity];
+			auto *dataAux = new std::variant<T, Set>[this->m_capacity];
 			auto *multiplicityAux = new size_t[this->m_capacity];
 			for (size_t i = 0; i < this->m_size; i++)
 			{
@@ -117,7 +119,7 @@ public:
 	 * @param value - элемент.
 	 * @return size_t - кратность.
 	 */
-	size_t getMultiplicity(const T &value)
+	size_t getMultiplicity(const std::variant<T, Set> &value)
 	{
 		for (size_t i = 0; i < this->m_size; i++)
 		{
@@ -131,7 +133,7 @@ public:
 	}
 	
 	/**
-	 * @brief Размер множества.
+	 * @brief Размер массива m_data.
 	 *
 	 * @return size_t размер.
 	 */
@@ -141,12 +143,11 @@ public:
 	}
 	
 	/**
-	 * @brief Все элементы множества в динамическом массиве.
+	 * @brief Все элементы массива m_data.
 	 *
-	 * @param destination - динамический массив, куда надо записать множес-
-	 *                      тво.
+	 * @param destination - динамический массив, куда надо записать m_data.
 	 */
-	void getElements(T *&destination)
+	void getElements(std::variant<T, Set> *&destination)
 	{
 		if (destination != nullptr)
 		{
@@ -156,7 +157,7 @@ public:
 		
 		if (this->m_size != 0)
 		{
-			destination = new T[this->m_size];
+			destination = new std::variant<T, Set>[this->m_size];
 			for (size_t i = 0; i < this->m_size; i++)
 			{
 				destination[i] = this->m_data[i];
@@ -171,7 +172,7 @@ public:
 	 * @return true - если элемент найден.
 	 * @return false - если нет.
 	 */
-	bool isFound(const T &value)
+	bool isFound(const std::variant<T, Set> &value)
 	{
 		return this->getMultiplicity(value) != 0;
 	}
@@ -182,6 +183,15 @@ public:
 	
 	template<typename T1>
 	friend bool operator!=(Set<T1>, Set<T1>);
+	
+	/**
+	 * @brief вывод множества.
+	 * 
+	 * @tparam T1 - тип хранимых данных.
+	 * @return std::ostream& - поток вывода.
+	 */
+	template<typename T1>
+	friend std::ostream & operator<<(std::ostream &, const Set<T1> &);
 };
 
 template<typename T>
@@ -208,6 +218,30 @@ template<typename T>
 bool operator!=(Set<T> lhs, Set<T> rhs)
 {
 	return !(lhs == rhs);
+}
+
+template<typename T>
+std::ostream & operator<<(std::ostream &out, const Set<T> &set)
+{
+	out << "{ ";
+	for (size_t i = 0; i < set.m_size; i++) {
+		for (size_t j = 0; j < set.m_multiplicity[i]; j++) {
+			try
+			{
+				T currentElement = std::get<T>(set.m_data[i]);
+				out << currentElement;
+			}
+			catch (const std::bad_variant_access&)
+			{
+				Set<T> currentElementSet = std::get< Set<T> >(set.m_data[i]);
+				out << currentElementSet;
+			}
+			out << ' ';
+		}
+	}
+	out << "}";
+	
+	return out;
 }
 
 #endif // SET_HPP

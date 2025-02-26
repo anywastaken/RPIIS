@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <gtest/gtest.h>
+
 #include "SymmetricalDifference.hpp"
 
 TEST(SymmetricalDifferenceTest, Test1)
@@ -119,6 +121,67 @@ TEST(SymmetricalDifferenceTest, Test6)
 	expectedResult.insert(ssExpected, 1);
 	
 	ASSERT_EQ(symmetricalDifference(s, 1), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test7)
+{
+	Set<int> s[2];
+	
+	Set<int> ss;
+	ss.insert(1, 1);
+	ss.insert(2, 1);
+	
+	s[0].insert(1, 1);
+	s[0].insert(ss, 1);
+	
+	s[1].insert(ss, 1);
+	s[1].insert(1, 1);
+	
+	Set<int> expectedResult;
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test8)
+{
+	Set<int> s[2];
+	
+	Set<int> ss;
+	ss.insert(1, 1);
+	
+	s[0].insert(ss, 1);
+	
+	s[1].insert(1, 1);
+	
+	Set<int> expectedResult;
+	expectedResult.insert(ss, 1);
+	expectedResult.insert(1, 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
+}
+
+TEST(SymmetricalDifferenceTest, Test9)
+{
+	Set<int> s[2];
+	s[0].insert(1, 1);
+	s[0].insert(s[0], 1);
+	s[0].insert(s[0], 1);
+	
+	s[1].insert(1, 1);
+	
+	Set<int> expectedResult;
+	
+	Set<int> s1;
+	s1.insert(1, 1);
+	
+	Set<int> ss1;
+	ss1.insert(1, 1);
+	ss1.insert(s1, 1);
+	
+	expectedResult.insert(s1, 1);
+	expectedResult.insert(ss1, 1);
+	
+	ASSERT_EQ(symmetricalDifference(s, 2), expectedResult);
 }
 
 int main(int argc, char *argv[])

@@ -11,7 +11,7 @@
  * @return Set<T> - симметрическая разность.
  */
 template<typename T>
-Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
+Set<T> symmetricalDifference(Set<T> a, Set<T> b)
 {
 	Set<T> s;
 	
@@ -40,19 +40,6 @@ Set<T> symmetricalDifference2arg(Set<T> a, Set<T> b)
 	delete[] bElements;
 	
 	return s;
-}
-
-template<typename T>
-Set<T> symmetricalDifference(Set<T> args[], size_t count)
-{
-	Set<T> result;
-	
-	for (size_t i = 0; i < count; i++)
-	{
-		result = symmetricalDifference2arg(result, args[i]);
-	}
-	
-	return result;
 }
 
 #endif // SYMMETRICAL_DIFFERENCE_HPP
