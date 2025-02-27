@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/a.out.dir/tests.cpp.o CMakeFiles/a.out.dir/Node.cpp.o CMakeFiles/a.out.dir/queue.cpp.o -o a.out  /usr/local/lib/libgtest.a 

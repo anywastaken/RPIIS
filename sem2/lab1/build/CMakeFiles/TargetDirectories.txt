@@ -1,0 +1,4 @@
+/home/qudef/Рабочий стол/code/queue/build/CMakeFiles/a.out.dir
+/home/qudef/Рабочий стол/code/queue/build/CMakeFiles/test.dir
+/home/qudef/Рабочий стол/code/queue/build/CMakeFiles/edit_cache.dir
+/home/qudef/Рабочий стол/code/queue/build/CMakeFiles/rebuild_cache.dir
