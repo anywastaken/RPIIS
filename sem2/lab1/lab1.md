@@ -283,3 +283,8 @@ void BFS()
 ### Тесты 
 ---
 
+# Граф 1
+![граф3](https://github.com/user-attachments/assets/77f819fe-2f20-4d07-a4d2-c037bfd30553)
+---
+# Матрица 
+
