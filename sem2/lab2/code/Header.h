@@ -146,6 +146,7 @@ vector<string> get_elements(string& set) {
                 elements.push_back(current);
             current.clear();
             }
+           
         }
         else {
             current += c;
@@ -158,6 +159,7 @@ vector<string> get_elements(string& set) {
 
     return elements;
 }
+
 string sort_set(string& str) {
     if (is_kortezh(str)) {
         vector<string> elements = get_elements(str);
@@ -218,6 +220,11 @@ void main_peresechenie(vector <Union>& testi, vector<string>& result) {
         peresechenie(testi[i].get_vector(), result);
     }
 }
+void checking_znaki(string& stroka) {
+    while (stroka.back() == ',' && !stroka.empty()) {
+        stroka.pop_back();
+    }
+}
 
 bool checking_pravilnost_stroki(string stroka) {
     stack<char> stack1;
@@ -246,9 +253,21 @@ bool checking_pravilnost_stroki(string stroka) {
             }
             else return false;
         }
+        else if (i != 0 && stack1.empty() && stroka.length() > 2) {
+            return false;
+        }
     }
     if (stack1.empty()) return true;
     else return false;
+}
+
+bool check_podrad(string stroka) {
+    for (int i = 0; i < stroka.length() - 1; i++) {
+        if ((stroka[i] == skoba2 && (stroka[i + 1] == skoba1 || stroka[i + 1] == skoba3)) || (stroka[i] == skoba4 && (stroka[i + 1] == skoba3 || stroka[i + 1] == skoba1))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 

@@ -36,19 +36,7 @@ int main() {
     }break;
 
     }
-    for (int i = 0; i < testi.size(); i++) {
-        bool flag = true;
-        for (auto el : testi[i].get_vector()) {
-            if (!checking_pravilnost_stroki(el)) {
-                flag = false;
-                break;
-            }
-        }
-        if (!flag) {
-            cout <<endl<< "Элемент множества "<<' '<< i+1<<' '<<"заполнен не корректно! Пргорамма завершается!"<<endl;
-            return 0;
-        }
-    }
+  
 
     for (int i = 0; i < testi.size(); i++) {
         auto& vec = testi[i].get_vector();
@@ -56,6 +44,21 @@ int main() {
             /* el.erase(remove(el.begin(), el.end(), ' '), el.end());*/
             string result = sort_set(el);
             el = result;
+        }
+    }
+   
+    for (int i = 0; i < testi.size(); i++) {
+        bool flag = true;
+        for (auto &el : testi[i].get_vector()) {
+            checking_znaki(el);
+            if (!checking_pravilnost_stroki(el) || !check_podrad(el)) {
+                flag = false;
+                break;
+            }
+        }
+        if (!flag) {
+            cout << endl << "Элемент множества " << ' ' << i + 1 << ' ' << "заполнен не корректно! Пргорамма завершается!" << endl;
+            return 0;
         }
     }
     cout << endl << "Отсортированные множества:" << endl;
