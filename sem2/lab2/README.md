@@ -73,8 +73,9 @@ vector<string> get_elements(string& set) {
     vector<string> elements;
     string current;
     int bracket_count = 0;
+    int bracket_count_treug = 0;
 
-    for (size_t i = 1; i < set.length() - 1; i++) {
+    for (int i = 1; i < set.length() - 1; i++) {
         char c = set[i];
 
         if (c == '{') {
@@ -84,15 +85,27 @@ vector<string> get_elements(string& set) {
         else if (c == '}') {
             bracket_count--;
             current += c;
-            if (bracket_count == 0) {
+            if (bracket_count == 0 && bracket_count_treug == 0) {
                 elements.push_back(current);
                 current.clear();
             }
         }
-        else if (c == ',' && bracket_count == 0) {
-            if (!current.empty()) {
+        else if (c == '<') {
+            bracket_count_treug++;
+            current += c;
+        }
+        else if (c == '>') {
+            bracket_count_treug--;
+            current += c;
+            if (bracket_count == 0 && bracket_count_treug == 0) {
                 elements.push_back(current);
                 current.clear();
+            }
+        }
+        else if (c == ',' && bracket_count == 0 && bracket_count_treug == 0) {
+            if (!current.empty()){
+                elements.push_back(current);
+            current.clear();
             }
         }
         else {
@@ -106,55 +119,43 @@ vector<string> get_elements(string& set) {
 
     return elements;
 }
-string sort_set(string& set) {
-    if (!is_set(set)) return set;
-
-    vector<string> elements = get_elements(set);
-
-    for (auto& element : elements) {
-        if (is_set(element)) {
-            element = sort_set(element);
-        }
-    }
-
-    bubble_sort(elements);
-    remove_duplicates(elements);
-
-    string result = "{";
-    for (size_t i = 0; i < elements.size(); i++) {
-        if (i > 0) result += ",";
-        result += elements[i];
-    }
-    result += "}";
-
-    return result;
-}
-```
-
-**4)** Функции для пересечения
-```C++
-void peresechenie(vector <string> tes, vector<string>& result) {
-    vector <string> temp;
-    for (auto& el : tes) {
-        bool flag = false;
-        for (auto& pers : result) {
-            if (el == pers) {
-                flag = true;
-                break;
+string sort_set(string& str) {
+    if (is_kortezh(str)) {
+        vector<string> elements = get_elements(str);
+        for (auto& element : elements) {
+            if (is_set(element) || is_kortezh(element)) {
+                element = sort_set(element);
             }
         }
-        if (flag) {
-            temp.push_back(el);
+        string result = "<";
+        for (size_t i = 0; i < elements.size(); i++) {
+            if (i > 0) result += ",";
+            result += elements[i];
         }
+        result += ">";
+        return result;
     }
-    result.clear();
-    result = temp;
+
+    if (is_set(str)) {
+        vector<string> elements = get_elements(str);
+        for (auto& element : elements) {
+            if (is_set(element) || is_kortezh(element)) {
+                element = sort_set(element);
+            }
+        }
+        bubble_sort(elements);
+        remove_duplicates(elements);
+        string result = "{";
+        for (size_t i = 0; i < elements.size(); i++) {
+            if (i > 0) result += ",";
+            result += elements[i];
+        }
+        result += "}";
+        return result;
+    }
+
+    return str;
 }
-void main_peresechenie(vector <Union>& testi, vector<string>& result) {
-    vector <string>temp;
-    for (int i = 1; i < testi.size(); i++) {
-        peresechenie(testi[i].get_vector(), result);
-    }
 }
 ```
 
