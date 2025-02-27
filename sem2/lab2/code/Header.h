@@ -5,6 +5,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stack>
+const char skoba1 = '{';
+const char skoba2 = '}';
+const char skoba3 = '<';
+const char skoba4 = '>';
 using namespace std;
 class Union {
 private:
@@ -102,6 +107,7 @@ void remove_duplicates(vector<string>& elements) {
     elements = unique;
 }
 
+
 vector<string> get_elements(string& set) {
     vector<string> elements;
     string current;
@@ -135,7 +141,7 @@ vector<string> get_elements(string& set) {
                 current.clear();
             }
         }
-        else if (c == ',' && bracket_count == 0 && bracket_count_treug == 0) {
+        else if ((c == ','||c==' ') && bracket_count == 0 && bracket_count_treug == 0) {
             if (!current.empty()){
                 elements.push_back(current);
             current.clear();
@@ -145,7 +151,7 @@ vector<string> get_elements(string& set) {
             current += c;
         }
     }
-
+    
     if (!current.empty()) {
         elements.push_back(current);
     }
@@ -213,8 +219,41 @@ void main_peresechenie(vector <Union>& testi, vector<string>& result) {
     }
 }
 
+bool checking_pravilnost_stroki(string stroka) {
+    stack<char> stack1;
+    for (int i = 0; i < stroka.length(); i++) {
+        if (stroka[i] == skoba1) {
+            stack1.push(skoba1);
+        }
+        else if (stroka[i] == skoba2) {
+            if (stack1.empty()) {
+                return false;
+            }
+            else if (stack1.top() == skoba1) {
+                stack1.pop();
+            }
+            else return false;
+        }
+        else if (stroka[i] == skoba3) {
+            stack1.push(skoba3);
+        }
+        else if (stroka[i] == skoba4) {
+            if (stack1.empty()) {
+                return false;
+            }
+            else if (stack1.top() == skoba3) {
+                stack1.pop();
+            }
+            else return false;
+        }
+    }
+    if (stack1.empty()) return true;
+    else return false;
+}
 
-void shitivanie_file(vector <Union>& us) {
+
+
+void shitivanie_file(vector <Union> &us) {
     ifstream file;
     file.open("input.txt");
     if (file.is_open()) {
@@ -225,6 +264,7 @@ void shitivanie_file(vector <Union>& us) {
         for (int i = 0; i < size_of_union; i++) {
             string stroka2;
             getline(file, stroka2);
+          
             vector <string> legend;
             legend.clear();
             int size_of_mn = stoi(stroka2);
@@ -234,13 +274,17 @@ void shitivanie_file(vector <Union>& us) {
                 legend.push_back(res);
             }
             us[i].set_of_vector(legend);
+            
         }
         file.close();
+        
     }
     else {
         cout << "Файл не открыт!!!";
         return;
     }
 }
+
+
 
 #endif

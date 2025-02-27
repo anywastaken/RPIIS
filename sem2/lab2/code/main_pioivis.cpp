@@ -16,6 +16,7 @@ int main() {
     switch (n) {
     case 1: {
         shitivanie_file(testi);
+       
     }break;
     case 2: {
         cout << "Введите количество множеств: " << endl;
@@ -34,6 +35,19 @@ int main() {
         cout << "вы ввели неправильный номер операции, программа завершена";
     }break;
 
+    }
+    for (int i = 0; i < testi.size(); i++) {
+        bool flag = true;
+        for (auto el : testi[i].get_vector()) {
+            if (!checking_pravilnost_stroki(el)) {
+                flag = false;
+                break;
+            }
+        }
+        if (!flag) {
+            cout <<endl<< "Элемент множества "<<' '<< i+1<<' '<<"заполнен не корректно! Пргорамма завершается!"<<endl;
+            return 0;
+        }
     }
 
     for (int i = 0; i < testi.size(); i++) {
