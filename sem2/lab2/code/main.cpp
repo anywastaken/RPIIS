@@ -13,6 +13,8 @@
 #include <cstdlib>   // size_t
 #include <string>    // std::string
 #include <exception> // std::exception
+#include <stack>     // std::stack
+#include <cctype>    // isalpha, isdigit
 
 #include "Tuple.hpp"
 #include "Set.hpp"
@@ -109,7 +111,9 @@ Tuple<std::string> getTupleByString(std::string &tupleStr, size_t beginIdx = 0)
 			}
 			else
 			{
-				t.insert(currentValue);
+				if (!currentValue.empty()) {
+					t.insert(currentValue);
+				}
 			}
 			currentValue.clear();
 		}
@@ -162,7 +166,9 @@ Set<std::string> getSetByString(std::string &setStr, size_t beginIdx = 0)
 			}
 			else
 			{
-				s.insert(currentValue, 1);
+				if (!currentValue.empty()) {
+					s.insert(currentValue, 1);
+				}
 			}
 			currentValue.clear();
 		}
@@ -182,6 +188,34 @@ Set<std::string> getSetByString(std::string &setStr, size_t beginIdx = 0)
 	}
 	
 	return s;
+}
+
+bool bracketsAreCorrect(const std::string &s)
+{
+	std::stack<char> balance;
+	for (char current : s)
+	{
+		switch (current)
+		{
+			case '{':
+				balance.push('}');
+				break;
+			case '<':
+				balance.push('>');
+				break;
+			case '}':
+			case '>':
+				if (balance.empty() || balance.top() != current)
+				{
+					return false;
+				}
+				balance.pop();
+				break;
+			default:
+				break;
+		}
+	}
+	return balance.empty();
 }
 
 /**
@@ -208,6 +242,28 @@ Set<std::string> getNextSet(std::istream &in)
 	}
 	setStr.erase(setStr.begin());
 	setStr.pop_back();
+	if (!bracketsAreCorrect(setStr)) {
+		std::cout << "The set is invalid. Please, fix the file.\n";
+		exit(EXIT_FAILURE);
+	}
+	for (size_t i = 0; i < setStr.size(); i++) {
+		if (!isalpha(setStr[i]) && !isdigit(setStr[i]) && setStr[i] != ' ' &&
+		    setStr[i] != '}' && setStr[i] != '{' &&
+		    setStr[i] != '<' && setStr[i] != '>')
+		{
+			std::cout << "The set is invalid. Please, fix the file.\n";
+			exit(EXIT_FAILURE);
+		}
+	}
+	for (size_t i = 1; i < setStr.size(); i++) {
+		if (setStr[i] == '}' || setStr[i] == '>' || setStr[i] == '<' || setStr[i] == '{')
+		{
+			if (setStr[i - 1] != ' ') {
+				std::cout << "The set is invalid. Please, fix the file.\n";
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 	Set<std::string> s = getSetByString(setStr);
 	return s;
 }

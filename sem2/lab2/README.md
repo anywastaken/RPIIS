@@ -125,8 +125,9 @@ bool operator==(Tuple<T> lhs, Tuple<T> rhs)
 				return false;
 			}
 		}
+		return true;
 	}
-	return true;
+	return false;
 }
 
 template<typename T>
