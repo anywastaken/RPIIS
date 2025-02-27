@@ -162,15 +162,15 @@ class RedBlackTree:
                 return current
         raise Missing(msg=f"Элемента с ключем {key} не существует")
 
-    def transplant(self, u: RedBlackNode, v: RedBlackNode) -> None:
-        if u.parent is None:
-            self._root = v
-        elif u == u.parent.left:
-            u.parent.left = v
+    def transplant(self, old_node: RedBlackNode, new_node: RedBlackNode) -> None:
+        if old_node.parent is None:
+            self._root = new_node
+        elif old_node == old_node.parent.left:
+            old_node.parent.left = new_node
         else:
-            u.parent.right = v
-        if v != self.NONE:
-            v.parent = u.parent
+            old_node.parent.right = new_node
+        if new_node != self.NONE:
+            new_node.parent = old_node.parent
 
     def delete(self, key: int) -> None:
         z = self.search(key)
@@ -187,7 +187,7 @@ class RedBlackTree:
             y = self.find_min(z.right)  # Преемник
             y_original_color = y.color
             x = y.right
-            if y.parent == z:
+            if y.parent == z and x != self.NONE:
                 x.parent = y
             else:
                 self.transplant(y, y.right)
@@ -208,7 +208,7 @@ class RedBlackTree:
         while x != self._root and x.color == Color.BLACK:
             if x == x.parent.left:
                 w = x.parent.right
-                if w.color:  # Случай 1: брат x - красный
+                if w.color == Color.RED:  # Случай 1: брат x - красный
                     w.color = Color.BLACK
                     x.parent.color = Color.RED
                     self.left_rotate(x.parent)
@@ -233,7 +233,7 @@ class RedBlackTree:
                     x = self._root
             else:
                 w = x.parent.left
-                if w.color:
+                if w.color == Color.RED:
                     w.color = Color.BLACK
                     x.parent.color = Color.RED
                     self.right_rotate(x.parent)
@@ -322,3 +322,4 @@ class RedBlackTree:
         if left_check and right_check:
             return len(set(black_counts)) == 1
         return False
+
