@@ -1,5 +1,5 @@
 <h1 align="center"> Лабораторная работа №3</h1>
-<p align="center"><img src="1.jpg">
+<p align="center"><img src="RPIIS/sem1/lab3/1.png">
   
 ### Регистрация
 
