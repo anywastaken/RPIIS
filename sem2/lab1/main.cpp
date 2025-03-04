@@ -1,4 +1,9 @@
+#include <iostream>
+#include <Windows.h>
+#include <string>
+#include <vector>
 #include "spisok.h"
+using namespace std;
 
 int main()
 {
