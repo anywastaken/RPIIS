@@ -22,21 +22,20 @@ void testSufArray() {
     assert(pos[4] == 4);
     assert(pos[5] == 2);
 
-    cout << "Тест пройден!" << endl;
+    cout << "Тест SufArray пройден!" << endl;
 }
 
 void testSuffShift() {
-    assert(SuffShift("banana") == 5);
-    assert(SuffShift("abacaba") == 0);
+    assert(SuffShift("earth") == 1);
+    assert(SuffShift("goideuu") == 3);
     assert(SuffShift("assyours") == 0);
-    cout << "Тест пройден!" << endl;
+    cout << "Тест SuffShift пройден!" << endl;
 }
 
 void testMaxPreff() {
     string s = "hihealertu";
-    assert(MaxPreff(s, "healer", "heal") == "heal");
-    assert(MaxPreff(s, "heat", "hi") == "");
+    assert(MaxPreff(s, "heal", "healert") == "heal");
+    assert(MaxPreff(s, "heal", "iheal") == "");
     assert(MaxPreff(s, "lert", "le") == "le");
-    cout << "Тест пройден!" << endl;
+    cout << "Тест MaxPreff пройден!" << endl;
 }
-
