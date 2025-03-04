@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include "spisok.h"
 using namespace std;
 
 void SufArray(string s, vector<string>& suf, vector<int>& pos) {
