@@ -14,7 +14,7 @@ void testSufArray() {
     assert(suf[3] == "banana");
     assert(suf[4] == "na");
     assert(suf[5] == "nana");
-  
+
     assert(pos[0] == 5);
     assert(pos[1] == 3);
     assert(pos[2] == 1);
@@ -26,16 +26,17 @@ void testSufArray() {
 }
 
 void testSuffShift() {
-    assert(SuffShift("banana") == 5); 
-    assert(SuffShift("abacaba") == 0); 
-    assert(SuffShift("aaaa") == 0); 
+    assert(SuffShift("banana") == 5);
+    assert(SuffShift("abacaba") == 0);
+    assert(SuffShift("assyours") == 0);
     cout << "Тест пройден!" << endl;
 }
 
 void testMaxPreff() {
-    string s = "abacaba";
-    assert(MaxPreff(s, "hihealer", "hiheatt") == "hihea");
-    assert(MaxPreff(s, "aba", "caba") == "");
-    assert(MaxPreff(s, "aba", "xyz") == "");
+    string s = "hihealertu";
+    assert(MaxPreff(s, "healer", "heal") == "heal");
+    assert(MaxPreff(s, "heat", "hi") == "");
+    assert(MaxPreff(s, "lert", "le") == "le");
     cout << "Тест пройден!" << endl;
 }
+
