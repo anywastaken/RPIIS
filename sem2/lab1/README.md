@@ -12,3 +12,6 @@
 
 ## Вариант:
 6. B-Дерево. Поиск. Вставка. Удаление.
+
+## B-дерево:
+<img alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/img/1.drawio.png">
