@@ -28,6 +28,6 @@
 * Корневая нода может содержать от 1 до 2t-1 ключей
 * Корневая нода может иметь от 2 до 2t дочерние ноды
 
-<p style = "text-align:center"><img alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/img/1.png"></p>
+<p style="text-align:center"><img alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/img/1.png"></p>
 
 *На картинке представлено В-дерево со степенью 4*
