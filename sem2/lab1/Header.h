@@ -1,19 +1,24 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>  // Для функций lower_bound и sort
 
 using namespace std;
 
-namespace ArrayUtils 
+class IntArray 
 {
+public:
+    IntArray() = default; // Конструктор по умолчанию. Создаёт пустой массив.
+    IntArray(const vector<int>& _arr); // Конструктор, который принимает вектор целых чисел для инициализации массива
 
-    void sortArray(vector<int>& arr);
+    vector<int> getArray() const;
+    void setArray(const vector<int>& _arr);
+    void sort();
+    void insert(int element);
+    int binarySearch(int element) const;
+    vector<int> mergeWith(const IntArray& other) const;
+    vector<int> intersectWith(const IntArray& other) const;
 
-    void insertElement(vector<int>& arr, int element);
-
-    int binarySearch(const vector<int>& arr, int element);
-
-    vector<int> mergeArrays(const vector<int>& arr1, const vector<int>& arr2);
-
-    vector<int> intersectArrays(const vector<int>& arr1, const vector<int>& arr2);
-}
+private:
+    vector<int> arr;
+};
