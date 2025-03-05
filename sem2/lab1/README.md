@@ -26,7 +26,3 @@
 
 ### Результат googletests
 <img src="image.png">
-### Литература
-<a href="https://www.klex.ru/1718">📗</a>.
-<a href="https://www.google.by/books/edition/%D0%9E%D0%BB%D0%B8%D0%BC%D0%BF%D0%B8%D0%B0%D0%B4%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC/34KzDwAAQBAJ?hl=ru&gbpv=1&printsec=frontcover">📘</a>.
-<a href="https://cchgeu.ru/upload/iblock/8b4/nrwdckls1bi7zzrfr2fnwx88145v1341/metodichka-Informatika-1.pdf">📕</a>.
