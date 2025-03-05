@@ -13,7 +13,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "Set.hpp"
+#include "Set_lib/Set.hpp"
 
 using namespace std;
  
@@ -28,14 +28,26 @@ int main()
     }
     else cout << "Problems with reading from file!" << endl;
 
+    string line(120, '-');
     Set mySet(str);
     mySet.displayBoolean();
+    cout << line << endl;
+
     vector< Set> boolean = mySet.getBoolean();
     for(auto set : boolean){
         set.displayBoolean();
     }
-    mySet.addElement("p");
+    cout << line << endl;
+
+    cout << "Boolean after adding" << endl;
+    mySet.addElement("{");
     mySet.displayBoolean();
-    boolean[0].displayBoolean();
+
+    cout << line << endl;
+    string str2;
+    cout << "Enter the string: ";
+    getline(cin, str2);
+    Set newSet(str2);
+    newSet.displayBoolean();
     return 0;
 }

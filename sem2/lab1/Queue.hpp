@@ -9,7 +9,7 @@ class Queue{
             std::string data;
             Node* next;
             
-            Node(std::string newData) 
+            explicit Node(std::string newData)
             : data(newData), next(nullptr){}
         };
         Node* head;
