@@ -81,7 +81,7 @@
 
 * Обход дерева
   
-```
+```C++
 void BTreeNode::traverse() {
     int i;
     for (i = 0; i < n; i++) {
