@@ -50,31 +50,31 @@
 * Тест 1
   
 <p align="center">
-   <img size = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.1.png">
+   <img width = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.1.png">
 </p>
 
 * Тест 2
   
 <p align="center">
-   <img size = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.2.png">
+   <img width = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.2.png">
 </p>
 
 * Тест 3
   
 <p align="center">
-   <img size = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.3.png">
+   <img width = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.3.png">
 </p>
 
 * Тест 4
   
 <p align="center">
-   <img size = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.4.png">
+   <img width = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.4.png">
 </p>
 
 * Тест 5
   
 <p align="center">
-   <img size = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.5.png">
+   <img width = "100px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.5.png">
 </p>
 
 ## Вывод:
