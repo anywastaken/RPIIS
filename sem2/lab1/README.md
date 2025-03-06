@@ -77,6 +77,138 @@
    <img width = "700px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.5.png">
 </p>
 
+## Алгоритмы программы (BTree.cpp): 
+
+* Обход дерева
+  
+```
+void BTreeNode::traverse() {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (!leaf) children[i]->traverse();
+        std::cout << keys[i] << " ";
+    }
+    if (!leaf) children[i]->traverse();
+}
+
+void BTree::traverse() {
+    if (root) root->traverse();
+}
+```
+
+* Поиск ключа в дереве
+  
+```
+BTreeNode* BTreeNode::search(int k) {
+    int i = 0;
+    while (i < n && k > keys[i]) i++;
+    if (keys[i] == k) return this;
+    if (leaf) return nullptr;
+    return children[i]->search(k);
+}
+
+BTreeNode* BTree::search(int k) {
+    return root ? root->search(k) : nullptr;
+}
+```
+
+* Вставка ключа
+  
+```
+void BTree::insert(int k) {
+    if (!root) {
+        root = new BTreeNode(t, true);
+        root->keys[0] = k;
+        root->n = 1;
+    }
+    else {
+        if (root->n == 2 * t - 1) {
+            BTreeNode* s = new BTreeNode(t, false);
+            s->children[0] = root;
+            s->splitChild(0, root);
+            int i = (s->keys[0] < k) ? 1 : 0;
+            s->children[i]->insertNonFull(k);
+            root = s;
+        }
+        else {
+            root->insertNonFull(k);
+        }
+    }
+}
+```
+
+* Вставка ключа, если нода заполнена не до конца(<2t-1)
+
+```
+void BTreeNode::insertNonFull(int k) {
+    int i = n - 1;
+    if (leaf) {
+        while (i >= 0 && keys[i] > k) {
+            keys[i + 1] = keys[i];
+            i--;
+        }
+        keys[i + 1] = k;
+        n++;
+    }
+    else {
+        while (i >= 0 && keys[i] > k) i--;
+        if (children[i + 1]->n == 2 * t - 1) {
+            splitChild(i + 1, children[i + 1]);
+            if (keys[i + 1] < k) i++;
+        }
+        children[i + 1]->insertNonFull(k);
+    }
+}
+```
+
+* Разбиение детей(Если это требуется)
+  
+```
+void BTreeNode::splitChild(int i, BTreeNode* y) {
+    BTreeNode* z = new BTreeNode(y->t, y->leaf);
+    z->n = t - 1;
+    for (int j = 0; j < t - 1; j++) z->keys[j] = y->keys[j + t];
+    if (!y->leaf) {
+        for (int j = 0; j < t; j++) z->children[j] = y->children[j + t];
+    }
+    y->n = t - 1;
+    for (int j = n; j >= i + 1; j--) children[j + 1] = children[j];
+    children[i + 1] = z;
+    for (int j = n - 1; j >= i; j--) keys[j + 1] = keys[j];
+    keys[i] = y->keys[t - 1];
+    n++;
+}
+```
+
+* Удаление ключа
+  
+```
+void BTree::remove(int k) {
+    if (!root) return;
+    root->remove(k);
+    if (root->n == 0) {
+        BTreeNode* tmp = root;
+        root = root->leaf ? nullptr : root->children[0];
+        delete tmp;
+    }
+}
+
+void BTreeNode::remove(int k) {
+    int idx = findKey(k);
+    if (idx < n && keys[idx] == k) {
+        if (leaf) removeFromLeaf(idx);
+        else removeFromNonLeaf(idx);
+    }
+    else {
+        if (leaf) return;
+        bool lastChild = (idx == n);
+        if (children[idx]->n < t) fill(idx);
+        if (lastChild && idx > n) children[idx - 1]->remove(k);
+        else children[idx]->remove(k);
+    }
+}
+```
+
 ## Вывод:
 * Мной была разработана библиотека по работе с B-деревьями. В ней я реализовал основные операции над B-деревом: вставка ключа, удаление ключа, поиск ключа, обход дерева.
 
