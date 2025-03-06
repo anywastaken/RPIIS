@@ -119,15 +119,11 @@ void manual_input() {
         int key;
         std::cout << "Введите " << i + 1 << " ключ: ";
         std::cin >> key;
-        if (Tree.search(key) != nullptr) {
+        if (!Tree.insert(key)) {
             std::cout << "Ключи не должны повторяться..." << std::endl;
             i--;
         }
-        else {
-            Tree.insert(key);
-        }
     }
-
     std::cout << "Обход дерева: ";
     Tree.traverse();
     std::cout << "\n";
