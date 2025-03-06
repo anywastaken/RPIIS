@@ -14,9 +14,23 @@ void IntArray::setArray(const vector<int>& _arr) //сеттер (заменяе�
     arr = _arr;
 }
 
-void IntArray::sort() 
+void IntArray::sort()
 {
-    std::sort(arr.begin(), arr.end());
+    bool isDone;
+    for (size_t i = 0; i < arr.size(); ++i) 
+    {
+        isDone = 1;
+        for (size_t j = 0; j < arr.size() - i - 1; ++j) 
+        {
+            if (arr[j] > arr[j + 1]) 
+            {
+                swap(arr[j], arr[j + 1]);
+                isDone = 0;
+            }
+        }
+        if (isDone) break;
+    }
+   
 }
 
 void IntArray::insert(int element) 
