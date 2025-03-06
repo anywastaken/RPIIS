@@ -41,6 +41,11 @@
    <img alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/2.png">
 </p>
 
+### Прилагаемые файлы:
+* [main.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/main.cpp) - файл тестов
+* [BTree.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.cpp) - функции
+* [BTree.hpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.hpp) - огловляющий файл
+
 ## Тесты:
 * Тест 1
 * Тест 2
@@ -50,3 +55,8 @@
 
 ## Вывод:
 * Мной была разработана библиотека по работе с B-деревом. В ней я реализовал основные операции над B-деревом: вставка ключа, удаление ключа, поиск ключа, обход дерева.
+
+## Материалы:
+*
+*
+*
