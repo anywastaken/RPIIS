@@ -77,7 +77,7 @@
    <img width = "700px" alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/4.5.png">
 </p>
 
-## Алгоритмы программы (BTree.cpp): 
+## Алгоритмы работы с B-деревьями(BTree.cpp): 
 
 * Обход дерева
   
