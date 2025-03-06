@@ -98,7 +98,7 @@ void BTree::traverse() {
 
 * Поиск ключа в дереве
   
-```
+```C++
 BTreeNode* BTreeNode::search(int k) {
     int i = 0;
     while (i < n && k > keys[i]) i++;
@@ -114,7 +114,7 @@ BTreeNode* BTree::search(int k) {
 
 * Вставка ключа
   
-```
+```C++
 void BTree::insert(int k) {
     if (!root) {
         root = new BTreeNode(t, true);
@@ -139,7 +139,7 @@ void BTree::insert(int k) {
 
 * Вставка ключа, если нода заполнена не до конца(<2t-1)
 
-```
+```C++
 void BTreeNode::insertNonFull(int k) {
     int i = n - 1;
     if (leaf) {
@@ -163,7 +163,7 @@ void BTreeNode::insertNonFull(int k) {
 
 * Разбиение детей(Если это требуется)
   
-```
+```C++
 void BTreeNode::splitChild(int i, BTreeNode* y) {
     BTreeNode* z = new BTreeNode(y->t, y->leaf);
     z->n = t - 1;
@@ -182,7 +182,7 @@ void BTreeNode::splitChild(int i, BTreeNode* y) {
 
 * Удаление ключа
   
-```
+```C++
 void BTree::remove(int k) {
     if (!root) return;
     root->remove(k);
