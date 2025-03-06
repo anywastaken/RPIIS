@@ -124,7 +124,10 @@ BTreeNode* BTree::search(int k) {
 * Вставка ключа
   
 ```C++
-void BTree::insert(int k) {
+bool BTree::insert(int k) {
+    if (BTree::search(k) != nullptr) {
+        return false;
+    }
     if (!root) {
         root = new BTreeNode(t, true);
         root->keys[0] = k;
