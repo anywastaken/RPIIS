@@ -42,9 +42,9 @@
 </p>
 
 ### Прилагаемые файлы:
-* [main.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/main.cpp) - файл тестов
-* [BTree.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.cpp) - функции
-* [BTree.hpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.hpp) - огловляющий файл
+* [main.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/main.cpp) - тесты
+* [BTree.cpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.cpp) - реализация
+* [BTree.hpp](https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/code/BTree.hpp) - декларация
 
 ## Тесты:
 * Тест 1
