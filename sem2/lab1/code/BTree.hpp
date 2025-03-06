@@ -37,7 +37,7 @@ public:
     BTree(int t = 3);
     void traverse();
     BTreeNode* search(int k);
-    void insert(int k);
+    bool insert(int k);
     void remove(int k);
 };
 
