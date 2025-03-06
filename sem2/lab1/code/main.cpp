@@ -29,15 +29,15 @@ int main() {
             break;
         case 3:
             clear_console();
-            std::cout << "Âûõîä èç ïðîãðàììû.\n";
+            std::cout << "Ð’Ñ‹Ñ…Ð¾Ð´ Ð¸Ð· Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñ‹.\n";
             break;
         default:
-            std::cout << "Íåâåðíûé ââîä. Ïîïðîáóéòå ñíîâà.\n";
+            std::cout << "ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ð²Ð²Ð¾Ð´. ÐŸÐ¾Ð¿Ñ€Ð¾Ð±ÑƒÐ¹Ñ‚Ðµ ÑÐ½Ð¾Ð²Ð°.\n";
             break;
         }
 
         if (choice != 3) {
-            std::cout << "Íàæìèòå Enter, ÷òîáû ïðîäîëæèòü...";
+            std::cout << "ÐÐ°Ð¶Ð¼Ð¸Ñ‚Ðµ Enter, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð¿Ñ€Ð¾Ð´Ð¾Ð»Ð¶Ð¸Ñ‚ÑŒ...";
             std::cin.ignore();
             std::cin.get();
         }
@@ -56,52 +56,52 @@ void clear_console() {
 }
 
 void print_menu() {
-    std::cout << "1. Çàïóñòèòü òåñòû\n";
-    std::cout << "2. Ðó÷íîé ââîä\n";
-    std::cout << "3. Âûõîä\n";
-    std::cout << "Âûáåðèòå îïöèþ: ";
+    std::cout << "1. Ð—Ð°Ð¿ÑƒÑÑ‚Ð¸Ñ‚ÑŒ Ñ‚ÐµÑÑ‚Ñ‹\n";
+    std::cout << "2. Ð ÑƒÑ‡Ð½Ð¾Ð¹ Ð²Ð²Ð¾Ð´\n";
+    std::cout << "3. Ð’Ñ‹Ñ…Ð¾Ð´\n";
+    std::cout << "Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ð¿Ñ†Ð¸ÑŽ: ";
 }
 
 void run_tests() {
     BTree Tree;
     int test_data[5][10] = {
-        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},          // Òåñò 1
-        {22, 11, 9, 52, 162, -10, 12, 66, 21, 33}, // Òåñò 2
-        {-11, -21, -31, 31, 21, 11, 155, 101, 47, 49}, // Òåñò 3
-        {-5, 7, -8, 9, 11, 221, -331, 21, 46, -92}, // Òåñò 4
-        {5, 2, -91, 132, 144, -55, 1, 3, 4, 6}                // Òåñò 5
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},          // Ð¢ÐµÑÑ‚ 1
+        {22, 11, 9, 52, 162, -10, 12, 66, 21, 33}, // Ð¢ÐµÑÑ‚ 2
+        {-11, -21, -31, 31, 21, 11, 155, 101, 47, 49}, // Ð¢ÐµÑÑ‚ 3
+        {-5, 7, -8, 9, 11, 221, -331, 21, 46, -92}, // Ð¢ÐµÑÑ‚ 4
+        {5, 2, -91, 132, 144, -55, 1, 3, 4, 6}                // Ð¢ÐµÑÑ‚ 5
     };
 
     for (int i = 0; i < 5; ++i) {
-        std::cout << "Òåñò " << i + 1 << ":\n";
+        std::cout << "Ð¢ÐµÑÑ‚ " << i + 1 << ":\n";
         for (int key : test_data[i]) {
             Tree.insert(key);
         }
-        std::cout << "Îáõîä äåðåâà: ";
+        std::cout << "ÐžÐ±Ñ…Ð¾Ð´ Ð´ÐµÑ€ÐµÐ²Ð°: ";
         Tree.traverse();
         std::cout << "\n";
 
         int key_to_delete;
-        std::cout << "Ââåäèòå êëþ÷ äëÿ óäàëåíèÿ: ";
+        std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ»ÑŽÑ‡ Ð´Ð»Ñ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ: ";
         std::cin >> key_to_delete;
 
         if (Tree.search(key_to_delete)) {
-            std::cout << "Êëþ÷ " << key_to_delete << " íàéäåí!\n";
-            std::cout << "Óäàëèòü? (1 - Äà, 0 - Íåò): ";
+            std::cout << "ÐšÐ»ÑŽÑ‡ " << key_to_delete << " Ð½Ð°Ð¹Ð´ÐµÐ½!\n";
+            std::cout << "Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ? (1 - Ð”Ð°, 0 - ÐÐµÑ‚): ";
             int choice;
             std::cin >> choice;
             if (choice == 1) {
                 Tree.remove(key_to_delete);
-                std::cout << "Äåðåâî ïîñëå óäàëåíèÿ: ";
+                std::cout << "Ð”ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ: ";
                 Tree.traverse();
                 std::cout << "\n";
             }
             else {
-                std::cout << "Óäàëåíèå îòìåíåíî.\n";
+                std::cout << "Ð£Ð´Ð°Ð»ÐµÐ½Ð¸Ðµ Ð¾Ñ‚Ð¼ÐµÐ½ÐµÐ½Ð¾.\n";
             }
         }
         else {
-            std::cout << "Êëþ÷ " << key_to_delete << " íå íàéäåí.\n";
+            std::cout << "ÐšÐ»ÑŽÑ‡ " << key_to_delete << " Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½.\n";
         }
 
         std::cout << "*-*-*-*-*-*-*-*\n";
@@ -112,15 +112,15 @@ void run_tests() {
 void manual_input() {
     BTree Tree;
     int num_of_keys;
-    std::cout << "Ââåäèòå êîëè÷åñòâî êëþ÷åé äëÿ âñòàâêè â äåðåâî: ";
+    std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÐºÐ»ÑŽÑ‡ÐµÐ¹ Ð´Ð»Ñ Ð²ÑÑ‚Ð°Ð²ÐºÐ¸ Ð² Ð´ÐµÑ€ÐµÐ²Ð¾: ";
     std::cin >> num_of_keys;
 
     for (int i = 0; i < num_of_keys; ++i) {
         int key;
-        std::cout << "Ââåäèòå " << i + 1 << " êëþ÷: ";
+        std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ " << i + 1 << " ÐºÐ»ÑŽÑ‡: ";
         std::cin >> key;
         if (Tree.search(key) != nullptr) {
-            std::cout << "Êëþ÷è íå äîëæíû ïîâòîðÿòüñÿ..." << std::endl;
+            std::cout << "ÐšÐ»ÑŽÑ‡Ð¸ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€ÑÑ‚ÑŒÑÑ..." << std::endl;
             i--;
         }
         else {
@@ -128,30 +128,30 @@ void manual_input() {
         }
     }
 
-    std::cout << "Îáõîä äåðåâà: ";
+    std::cout << "ÐžÐ±Ñ…Ð¾Ð´ Ð´ÐµÑ€ÐµÐ²Ð°: ";
     Tree.traverse();
     std::cout << "\n";
 
     int key_to_search;
-    std::cout << "Ââåäèòå êëþ÷ äëÿ ïîèñêà: ";
+    std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ»ÑŽÑ‡ Ð´Ð»Ñ Ð¿Ð¾Ð¸ÑÐºÐ°: ";
     std::cin >> key_to_search;
 
     if (Tree.search(key_to_search)) {
-        std::cout << "Êëþ÷ " << key_to_search << " íàéäåí!\n";
-        std::cout << "Óäàëèòü? (1 - Äà, 0 - Íåò): ";
+        std::cout << "ÐšÐ»ÑŽÑ‡ " << key_to_search << " Ð½Ð°Ð¹Ð´ÐµÐ½!\n";
+        std::cout << "Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ? (1 - Ð”Ð°, 0 - ÐÐµÑ‚): ";
         int choice;
         std::cin >> choice;
         if (choice == 1) {
             Tree.remove(key_to_search);
-            std::cout << "Äåðåâî ïîñëå óäàëåíèÿ: ";
+            std::cout << "Ð”ÐµÑ€ÐµÐ²Ð¾ Ð¿Ð¾ÑÐ»Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ: ";
             Tree.traverse();
             std::cout << "\n";
         }
         else {
-            std::cout << "Óäàëåíèå îòìåíåíî.\n";
+            std::cout << "Ð£Ð´Ð°Ð»ÐµÐ½Ð¸Ðµ Ð¾Ñ‚Ð¼ÐµÐ½ÐµÐ½Ð¾.\n";
         }
     }
     else {
-        std::cout << "Êëþ÷ " << key_to_search << " íå íàéäåí.\n";
+        std::cout << "ÐšÐ»ÑŽÑ‡ " << key_to_search << " Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½.\n";
     }
 }
