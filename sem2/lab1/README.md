@@ -48,6 +48,9 @@
 
 ## Тесты:
 * Тест 1
+<p align="center">
+   <img alt="Пример B-дерева" src="https://github.com/iis-42x70x/RPIIS/blob/Говор_Г/sem2/lab1/img/vqQi6oT.png">
+</p>
 * Тест 2
 * Тест 3
 * Тест 4
