@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TEST(IntArrayClassTest, ClassSortWorksCorrectly) 
+TEST(ArrTest, Sort) 
 {
     IntArray arr({ 4, 2, 7, 1, 3 });
     arr.sort();
@@ -12,20 +12,20 @@ TEST(IntArrayClassTest, ClassSortWorksCorrectly)
     EXPECT_EQ(arr.getArray(), expected);
 }
 
-TEST(IntArrayClassTest, ClassInsertWorksCorrectly) {
+TEST(ArrTest, Insert) {
     IntArray arr({ 1, 3, 5, 7 });
     arr.insert(4);
     vector<int> expected = { 1, 3, 4, 5, 7 };
     EXPECT_EQ(arr.getArray(), expected);
 }
 
-TEST(IntArrayClassTest, ClassBinarySearchWorksCorrectly) {
+TEST(ArrTest, BinSearch) {
     IntArray arr({ 1, 2, 3, 4, 5 });
     int index = arr.binarySearch(3);
     EXPECT_EQ(index, 2);
 }
 
-TEST(IntArrayClassTest, ClassMergeWorksCorrectly) {
+TEST(ArrTest, Merge) {
     IntArray arr1({ 1, 3, 5 });
     IntArray arr2({ 2, 4, 6 });
     vector<int> merged = arr1.mergeWith(arr2);
@@ -33,7 +33,7 @@ TEST(IntArrayClassTest, ClassMergeWorksCorrectly) {
     EXPECT_EQ(merged, expected);
 }
 
-TEST(IntArrayClassTest, ClassIntersectWorksCorrectly) {
+TEST(ArrTest, Intersection) {
     IntArray arr1({ 1, 3, 5, 7 });
     IntArray arr2({ 3, 4, 5, 8 });
     vector<int> intersection = arr1.intersectWith(arr2);
