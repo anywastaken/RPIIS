@@ -157,7 +157,7 @@ bool BTree::insert(int k) {
 }
 ```
 
-*Проверяет, существует ли ключ (search(k)).
+* Проверяет, существует ли ключ (search(k)).
 * Если дерево пустое, создаёт корень.
 * Если корень полон, создаёт новый узел, делает старый корнем его дочерним узлом и разбивает старый корень.
 * Вставляет ключ в неполный узел.
@@ -257,7 +257,7 @@ int BTreeNode::findKey(int k) {
 
 # Удаление ключа из листа
 
-```
+```C++
 void BTreeNode::removeFromLeaf(int idx) {
     for (int i = idx + 1; i < n; i++) keys[i - 1] = keys[i];
     n--;
@@ -268,7 +268,7 @@ void BTreeNode::removeFromLeaf(int idx) {
 
 # Удаление ключа не из листа
 
-```
+```C++
 void BTreeNode::removeFromNonLeaf(int idx) {
     int k = keys[idx];
     if (children[idx]->n >= t) {
@@ -295,7 +295,7 @@ void BTreeNode::removeFromNonLeaf(int idx) {
 
 # Нахождение предшествующего и преемника ключа
 
-```
+```C++
 int BTreeNode::getPred(int idx) {
     BTreeNode* cur = children[idx];
     while (!cur->leaf) cur = cur->children[cur->n];
@@ -311,7 +311,7 @@ int BTreeNode::getSucc(int idx) {
 
 # Балансировка узла
 
-```
+```C++
 void BTreeNode::fill(int idx) {
     if (idx != 0 && children[idx - 1]->n >= t) borrowFromPrev(idx);
     else if (idx != n && children[idx + 1]->n >= t) borrowFromNext(idx);
@@ -330,7 +330,7 @@ void BTreeNode::fill(int idx) {
 
 # Заимствование ключа у левого и правого соседов
 
-```
+```C++
 void BTreeNode::borrowFromPrev(int idx) {
     BTreeNode* child = children[idx];
     BTreeNode* sibling = children[idx - 1];
@@ -368,7 +368,7 @@ void BTreeNode::borrowFromNext(int idx) {
 
 # Объединение с соседним узлом
 
-```
+```C++
 void BTreeNode::merge(int idx) {
     BTreeNode* child = children[idx];
     BTreeNode* sibling = children[idx + 1];
