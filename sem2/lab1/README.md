@@ -87,7 +87,7 @@
 
 ## Алгоритмы работы с B-деревьями(BTree.cpp): 
 
-* Обход дерева
+# Обход дерева
   
 ```C++
 void BTreeNode::traverse() {
@@ -104,7 +104,10 @@ void BTree::traverse() {
 }
 ```
 
-* Поиск ключа в дереве
+* Обходит узел в порядке in-order (сначала дети, затем ключи).
+* Рекурсивно вызывает traverse() для всех дочерних узлов.
+
+# Поиск ключа в дереве
   
 ```C++
 BTreeNode* BTreeNode::search(int k) {
@@ -121,7 +124,12 @@ BTreeNode* BTree::search(int k) {
 
 ```
 
-* Вставка ключа
+* Выполняет линейный поиск в массиве ключей текущего узла.
+* Если ключ найден в текущем узле — возвращает указатель на этот узел.
+* Если узел является листом и ключ не найден — возвращает nullptr.
+* Иначе рекурсивно ищет ключ в нужном дочернем узле.
+
+# Вставка ключа
   
 ```C++
 bool BTree::insert(int k) {
@@ -149,7 +157,12 @@ bool BTree::insert(int k) {
 }
 ```
 
-* Вставка ключа, если нода заполнена не до конца(<2t-1)
+*Проверяет, существует ли ключ (search(k)).
+* Если дерево пустое, создаёт корень.
+* Если корень полон, создаёт новый узел, делает старый корнем его дочерним узлом и разбивает старый корень.
+* Вставляет ключ в неполный узел.
+
+# Вставка ключа, если нода заполнена не до конца(<2t-1)
 
 ```C++
 void BTreeNode::insertNonFull(int k) {
@@ -173,7 +186,16 @@ void BTreeNode::insertNonFull(int k) {
 }
 ```
 
-* Разбиение детей(Если это требуется)
+* Если узел лист, вставляет ключ в правильное место, сдвигая элементы вправо.
+* Если узел не лист, рекурсивно спускается в нужного потомка.
+* Если у потомка уже 2*t - 1 ключей, разбивает его перед вставкой.
+
+# Разбиение дочерних нод(Если это требуется)
+
+* Разбивает узел y, у которого 2*t - 1 ключей.
+* Создаёт новый узел z и переносит в него вторую половину ключей из y.
+* Средний ключ перемещается в родительский узел.
+* Обновляет массив children[] у родителя.
   
 ```C++
 void BTreeNode::splitChild(int i, BTreeNode* y) {
@@ -192,8 +214,14 @@ void BTreeNode::splitChild(int i, BTreeNode* y) {
 }
 ```
 
-* Удаление ключа
-  
+# Удаление ключа
+
+* Ищет ключ в узле:
+** Если ключ в листе → удаляет его (removeFromLeaf).
+** Если ключ внутренний → заменяет его преемником (removeFromNonLeaf).
+* Если ключа нет, рекурсивно удаляет его из нужного дочернего узла.
+* Если у узла перед удалением меньше t ключей, выполняет балансировку (fill).
+
 ```C++
 void BTree::remove(int k) {
     if (!root) return;
@@ -225,12 +253,22 @@ int BTreeNode::findKey(int k) {
     while (idx < n && keys[idx] < k) ++idx;
     return idx;
 }
+```
 
+# Удаление ключа из листа
+
+```
 void BTreeNode::removeFromLeaf(int idx) {
     for (int i = idx + 1; i < n; i++) keys[i - 1] = keys[i];
     n--;
 }
+```
 
+*Просто сдвигает ключи влево и уменьшает n
+
+# Удаление ключа не из листа
+
+```
 void BTreeNode::removeFromNonLeaf(int idx) {
     int k = keys[idx];
     if (children[idx]->n >= t) {
@@ -248,7 +286,16 @@ void BTreeNode::removeFromNonLeaf(int idx) {
         children[idx]->remove(k);
     }
 }
+```
 
+* Ключ заменяется предшественником или преемником:
+** Если children[idx] содержит >= t ключей → заменяет предшественником.
+** Иначе, если children[idx+1] содержит >= t ключей → заменяет преемником.
+** Если оба узла имеют менее t ключей, объединяет их и удаляет ключ из объединённого узла.
+
+# Нахождение предшествующего и преемника ключа
+
+```
 int BTreeNode::getPred(int idx) {
     BTreeNode* cur = children[idx];
     while (!cur->leaf) cur = cur->children[cur->n];
@@ -260,7 +307,11 @@ int BTreeNode::getSucc(int idx) {
     while (!cur->leaf) cur = cur->children[0];
     return cur->keys[0];
 }
+```
 
+# Балансировка узла
+
+```
 void BTreeNode::fill(int idx) {
     if (idx != 0 && children[idx - 1]->n >= t) borrowFromPrev(idx);
     else if (idx != n && children[idx + 1]->n >= t) borrowFromNext(idx);
@@ -269,7 +320,17 @@ void BTreeNode::fill(int idx) {
         else merge(idx - 1);
     }
 }
+```
 
+* Если children[idx] имеет менее t ключей:
+** Если children[idx-1] имеет >= t ключей → заимствует ключ из него (borrowFromPrev).
+** Иначе, если children[idx+1] имеет >= t ключей → заимствует ключ (borrowFromNext).
+** Если у обоих соседей менее t ключей → объединяет с соседом (merge).
+
+
+# Заимствование ключа у левого и правого соседов
+
+```
 void BTreeNode::borrowFromPrev(int idx) {
     BTreeNode* child = children[idx];
     BTreeNode* sibling = children[idx - 1];
@@ -303,7 +364,11 @@ void BTreeNode::borrowFromNext(int idx) {
     child->n++;
     sibling->n--;
 }
+```
 
+# Объединение с соседним узлом
+
+```
 void BTreeNode::merge(int idx) {
     BTreeNode* child = children[idx];
     BTreeNode* sibling = children[idx + 1];
@@ -327,6 +392,9 @@ void BTreeNode::merge(int idx) {
     delete sibling;
 }
 ```
+
+* Объединяет children[idx] и children[idx+1], перемещая ключ из родителя вниз.
+* Удаляет children[idx+1] и уменьшает количество ключей в родителе.
 
 ## Вывод:
 * Мной была разработана библиотека по работе с B-деревьями. В ней я реализовал основные операции над B-деревом: вставка ключа, удаление ключа, поиск ключа, обход дерева.
