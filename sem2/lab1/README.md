@@ -96,11 +96,11 @@ void display(const HashTable& ht) {
 ```
 ### <p align="center">Реализация программы</p>
 ## Инициализация Хеш-таблицы и добавление в нее первой пары
-<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A42%3A07.jpg" alt="альтернативный текст" width ="450" height = "400" >
-## Поиск элемента по ключу 
-<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A58%3A14.jpg" alt="альтернативный текст" width ="450" height = "400" >
-## Удаление элемента по ключу
-<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2018%3A00%3A47.jpg" alt="альтернативный текст" width ="450" height = "400" >
+<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A42%3A07.jpg" alt="альтернативный текст" width ="550" height = "500" >
+Поиск элемента по ключу 
+<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A58%3A14.jpg" alt="альтернативный текст" width ="550" height = "500" >
+Удаление элемента по ключу
+<img src="https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2018%3A00%3A47.jpg" alt="альтернативный текст" width ="550" height = "500" >
 
 
 ## Заключение
