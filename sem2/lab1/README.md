@@ -95,7 +95,7 @@ void display(const HashTable& ht) {
 
 ```
 ## Инициализация Хеш-таблицы и добавление в нее первой пары
-![image]([https://github.com/user-attachments/assets/83af258b-b9c6-4a04-8e89-28d69646298e](https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A42%3A07.jpg))
+![image](https://github.com/iis-42x70x/RPIIS/blob/Неводниченко_М/sem2/lab1/screens/IMAGE%202025-03-09%2017%3A42%3A07.jpg)
 
 
 ## Заключение
