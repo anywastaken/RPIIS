@@ -35,17 +35,6 @@
 
 ```cpp
 
-
-bool povtor(string* mn, int size, const string& elem) {
-    for (int i = 0; i < size; ++i) {
-        if (mn[i] == elem) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 ```
 
 2.  С помощью функции ** реализуется подстановка элементов в фигурные скобки
