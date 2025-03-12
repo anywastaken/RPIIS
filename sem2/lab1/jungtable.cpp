@@ -7,7 +7,6 @@ using namespace std;
 
 int jungtable::push(int element)
 {
-    //проверка на повторяемость элементов
     int flag = 0;
     for (int i = 0; i < body.size(); i++) {
         for (int j = 0; j < body[i].size(); j++) {
@@ -16,7 +15,6 @@ int jungtable::push(int element)
     }
     if (flag != 0) { return 404; }
 
-    //добавление элемента
     for (int i = 0; ; i++) {
         if (body.size() < i + 1) {
             body.push_back(vector<int>(1, element));
